@@ -1,0 +1,181 @@
+html {
+  background-color: black;
+  font-family: system-ui;
+  color: white;
+}
+
+/* Basic CSS styling for the menu and sections */
+#menu {
+  display: flex;
+  list-style: none;
+  padding: 20px;
+  justify-content: center;
+  /* Center-align the options */
+}
+
+#menu li {
+  margin: 5px;
+  cursor: pointer;
+  padding: 15px;
+  background-color: #000000;
+  border-radius: 20px;
+}
+
+#menu li.active {
+  background-color: #007bff;
+  /* Highlight the active option */
+  color: #fff;
+  /* Text color for active option */
+}
+
+#sections {
+  text-align: -webkit-center;
+  padding: 20px;
+}
+
+#sections .section {
+  display: none;
+  background-color: #a51b87;
+  padding: 20px;
+  text-align: -webkit-auto;
+  width: 50%;
+  border-radius: 50px;
+}
+
+div .input-element,
+.checkbox-element {
+  padding: 10px;
+}
+
+.cta-button {
+  padding: 25px 20px 0 20px;
+  text-align: center;
+}
+
+.input-element {
+  display: flex;
+}
+
+.input-element label {
+  flex: 1;
+}
+
+.input-element input {
+  flex: 2;
+}
+
+button, input[type="reset"] {
+  padding: 15px;
+  border-radius: 28px;
+  background-color: white;
+  cursor: pointer;
+  border-style: none;
+  width: max-content;
+  text-align: center;
+}
+
+input {
+  border-style: none;
+  border-bottom-style: outset;
+  width: 25%;
+  background-color: inherit;
+}
+
+h2.section-title {
+  text-align: center;
+}
+
+/* Default styles for all screen sizes */
+
+/* Add some space on top for better spacing */
+body {
+  margin-top: 20px;
+}
+
+/* Styles for small screens (phones) */
+@media (max-width: 600px) {
+  #menu {
+    flex-direction: column;
+    /* Stack menu items vertically */
+
+    align-items: center;
+    /* Center-align menu items */
+  }
+
+  #menu li {
+    margin: 5px 0;
+    /* Reduce vertical margin for menu items */
+  }
+
+  #sections .section {
+    width: 90%;
+    /* Make sections wider on small screens */
+  }
+}
+
+/* Styles for medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  #menu {
+    justify-content: center;
+    /* Center-align menu items horizontally */
+  }
+}
+
+/* Styles for large screens (desktops) */
+@media (min-width: 1025px) {
+  /* Add styles for large screens here if needed */
+}
+
+/* Mobile menu styles */
+#mobile-menu {
+  display: none;
+  /* Hide the mobile menu by default */
+  background-color: #000000;
+  text-align: center;
+}
+
+.menu-button {
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  font-size: inherit;
+  font-weight: bold;
+}
+
+#menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: none;
+  /* Hide the list of menu items by default */
+}
+
+#menu-list li {
+  margin: 5px 0;
+  padding: 15px;
+  background-color: #000000;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Show the mobile menu on small screens */
+@media (max-width: 600px) {
+  #menu {
+    display: none;
+    /* Hide the desktop menu on small screens */
+  }
+
+  #mobile-menu {
+    display: block;
+    /* Show the mobile menu */
+  }
+
+  /* Show the menu list when the mobile menu is expanded */
+  #mobile-menu.expanded #menu-list {
+    display: block;
+  }
+}
