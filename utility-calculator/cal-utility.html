@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/global.css" />
     <link rel="stylesheet" type="text/css" href="styles/cal-utility.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- <script src="scripts/jquery.min.js"></script> -->
@@ -11,160 +12,180 @@
 </head>
 
 <body>
-    <div id="mobile-menu">
-        <button id="menu-toggle" class="menu-button">Choose</button>
-        <ul id="menu-list">
-            <li class="section-item" title="Time Difference" name="time-diff-section" class="active">Time Difference</li>
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <div class="logo">
+                    <a class="logo-name" href="home.html">AKart</a>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a class="border" href="cal-utility.html">Utility Calcuator</a>
+                <a class="border" href="bills-optimizer.html">Bills Optimizer</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div id="mobile-menu">
+            <button id="menu-toggle" class="menu-button">Choose</button>
+            <ul id="menu-list">
+                <li class="section-item" title="Time Difference" name="time-diff-section" class="active">Time Difference
+                </li>
+                <li class="section-item" title="Add Time" name="add-time-section">Add Time</li>
+                <li class="section-item" title="Date Difference" name="date-diff-section">Date Difference</li>
+                <li class="section-item" title="Add Days" name="add-days-section">Add Days</li>
+                <li class="section-item" title="BMI" name="bmi-section">BMI</li>
+                <li class="section-item" title="EMI" name="emi-section">EMI</li>
+            </ul>
+        </div>
+        <ul id="menu">
+            <li class="section-item" title="Time Difference" name="time-diff-section" class="active">Time Difference
+            </li>
             <li class="section-item" title="Add Time" name="add-time-section">Add Time</li>
             <li class="section-item" title="Date Difference" name="date-diff-section">Date Difference</li>
             <li class="section-item" title="Add Days" name="add-days-section">Add Days</li>
             <li class="section-item" title="BMI" name="bmi-section">BMI</li>
             <li class="section-item" title="EMI" name="emi-section">EMI</li>
         </ul>
-    </div>
-    <ul id="menu">
-        <li class="section-item" title="Time Difference" name="time-diff-section" class="active">Time Difference</li>
-            <li class="section-item" title="Add Time" name="add-time-section">Add Time</li>
-            <li class="section-item" title="Date Difference" name="date-diff-section">Date Difference</li>
-            <li class="section-item" title="Add Days" name="add-days-section">Add Days</li>
-            <li class="section-item" title="BMI" name="bmi-section">BMI</li>
-            <li class="section-item" title="EMI" name="emi-section">EMI</li>
-    </ul>
-    <div id="sections">
-        <div id="add-days-section" title="Add Days" class="section">
-            <h2 class="section-title">Add Days</h2>
-            <div class="add-days">
-                <form name="add-days-form">
-                    <div class="input-element">
-                        <label for="start-date">Start Date</label>
-                        <input type="date" id="start-date" class="start-date" name="start-date">
-                    </div>
-                    <div class="input-element">
-                        <label for="no-of-days">Number of Days</label>
-                        <input type="number" id="no-of-days" class="no-of-days" name="no-of-days">
-                    </div>
-                    <div class="checkbox-element">
-                        <label for="count-start-date">Include Start Date</label>
-                        <input type="checkbox" id="count-start-date" class="count-start-date" name="count-start-date">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="add-days-button">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="add-days-result" align="center"></p>
-                </form>
+        <div id="sections">
+            <div id="add-days-section" title="Add Days" class="section">
+                <h2 class="section-title">Add Days</h2>
+                <div class="add-days">
+                    <form name="add-days-form">
+                        <div class="input-element">
+                            <label for="start-date">Start Date</label>
+                            <input type="date" id="start-date" class="start-date" name="start-date">
+                        </div>
+                        <div class="input-element">
+                            <label for="no-of-days">Number of Days</label>
+                            <input type="number" id="no-of-days" class="no-of-days" name="no-of-days">
+                        </div>
+                        <div class="checkbox-element">
+                            <label for="count-start-date">Include Start Date</label>
+                            <input type="checkbox" id="count-start-date" class="count-start-date"
+                                name="count-start-date">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="add-days-button">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="add-days-result" align="center"></p>
+                    </form>
+                </div>
+            </div>
+            <div id="time-diff-section" title="Time Difference" class="section">
+                <h2 class="section-title">Time Difference</h2>
+                <div class="time-diff">
+                    <form name="time-diff-form">
+                        <div class="input-element">
+                            <label for="from-time">Start Time</label>
+                            <input type="time" id="from-time" class="from-time" name="from-time">
+                        </div>
+                        <div class="input-element">
+                            <label for="to-time">End Time</label>
+                            <input type="time" id="to-time" class="to-time" name="to-time">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="time-diff-button"
+                                title="Calculate time difference">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="time-diff-result" align="center"></p>
+                    </form>
+                </div>
+            </div>
+            <div id="date-diff-section" title="Date Difference" class="section">
+                <h2 class="section-title">Date Difference</h2>
+                <div class="date-diff">
+                    <form name="date-diff-form">
+                        <div class="input-element">
+                            <label for="from-date">Start Date</label>
+                            <input type="date" id="from-date" class="from-date" name="from-date">
+                        </div>
+                        <div class="input-element">
+                            <label for="to-date">End Date</label>
+                            <input type="date" id="to-date" class="to-date" name="to-date">
+                        </div>
+                        <div class="checkbox-element">
+                            <label for="count-from-date">Include Start Date</label>
+                            <input type="checkbox" id="count-from-date" class="count-from-date" name="count-from-date">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="date-diff-button">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="date-diff-result" align="center"></p>
+                    </form>
+                </div>
+            </div>
+            <div id="add-time-section" title="Add Time" class="section">
+                <h2 class="section-title">Add Time</h2>
+                <div class="add-time">
+                    <form name="add-time-form">
+                        <div class="input-element">
+                            <label for="start-time">Start Time</label>
+                            <input type="time" id="start-time" class="start-time" name="start-time">
+                        </div>
+                        <div class="input-element">
+                            <label for="add-time">Add Time</label>
+                            <input type="time" id="add-time" class="add-time" name="add-time">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="add-time-button">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="add-time-result" align="center"></p>
+                    </form>
+                </div>
+            </div>
+            <div id="bmi-section" title="BMI" class="section">
+                <h2 class="section-title">Body Mass Index</h2>
+                <div class="bmi">
+                    <form name="bmi-form">
+                        <div class="input-element">
+                            <label for="height">Height (in meters)</label>
+                            <input type="number" id="height" class="height" name="height">
+                        </div>
+                        <div class="input-element">
+                            <label for="weight">Weight (in KGs)</label>
+                            <input type="number" id="weight" class="weight" name="weight">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="bmi-button">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="bmi-result" align="center"></p>
+                    </form>
+                </div>
+            </div>
+            <div id="emi-section" title="EMI" class="section">
+                <h2 class="section-title">EMI</h2>
+                <div class="emi">
+                    <form name="emi-form">
+                        <div class="input-element">
+                            <label for="loan-amount">Loan Amout</label>
+                            <input type="number" id="loan-amount" class="loan-amount" name="loan-amount">
+                        </div>
+                        <div class="input-element">
+                            <label for="tenure">Tenure (in months)</label>
+                            <input type="number" id="tenure" class="tenure" name="tenure">
+                        </div>
+                        <div class="input-element">
+                            <label for="interest-rate">Interest Rate (%)</label>
+                            <input type="number" id="interest-rate" class="interest-rate" name="interest-rate">
+                        </div>
+                        <div class="cta-button">
+                            <button type="button" class="emi-button">Calculate</button>
+                            <input type="reset" title="Clear entries" value="Clear">
+                        </div>
+                        <p class="section-result" id="emi-result" title="EMI Result" align="center"></p>
+                    </form>
+                </div>
             </div>
         </div>
-        <div id="time-diff-section" title="Time Difference" class="section">
-            <h2 class="section-title">Time Difference</h2>
-            <div class="time-diff">
-                <form name="time-diff-form">
-                    <div class="input-element">
-                        <label for="from-time">Start Time</label>
-                        <input type="time" id="from-time" class="from-time" name="from-time">
-                    </div>
-                    <div class="input-element">
-                        <label for="to-time">End Time</label>
-                        <input type="time" id="to-time" class="to-time" name="to-time">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="time-diff-button" title="Calculate time difference">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="time-diff-result" align="center"></p>
-                </form>
-            </div>
-        </div>
-        <div id="date-diff-section" title="Date Difference" class="section">
-            <h2 class="section-title">Date Difference</h2>
-            <div class="date-diff">
-                <form name="date-diff-form">
-                    <div class="input-element">
-                        <label for="from-date">Start Date</label>
-                        <input type="date" id="from-date" class="from-date" name="from-date">
-                    </div>
-                    <div class="input-element">
-                        <label for="to-date">End Date</label>
-                        <input type="date" id="to-date" class="to-date" name="to-date">
-                    </div>
-                    <div class="checkbox-element">
-                        <label for="count-from-date">Include Start Date</label>
-                        <input type="checkbox" id="count-from-date" class="count-from-date" name="count-from-date">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="date-diff-button">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="date-diff-result" align="center"></p>
-                </form>
-            </div>
-        </div>
-        <div id="add-time-section" title="Add Time" class="section">
-            <h2 class="section-title">Add Time</h2>
-            <div class="add-time">
-                <form name="add-time-form">
-                    <div class="input-element">
-                        <label for="start-time">Start Time</label>
-                        <input type="time" id="start-time" class="start-time" name="start-time">
-                    </div>
-                    <div class="input-element">
-                        <label for="add-time">Add Time</label>
-                        <input type="time" id="add-time" class="add-time" name="add-time">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="add-time-button">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="add-time-result" align="center"></p>
-                </form>
-            </div>
-        </div>
-        <div id="bmi-section" title="BMI" class="section">
-            <h2 class="section-title">Body Mass Index</h2>
-            <div class="bmi">
-                <form name="bmi-form">
-                    <div class="input-element">
-                        <label for="height">Height (in meters)</label>
-                        <input type="number" id="height" class="height" name="height">
-                    </div>
-                    <div class="input-element">
-                        <label for="weight">Weight (in KGs)</label>
-                        <input type="number" id="weight" class="weight" name="weight">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="bmi-button">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="bmi-result" align="center"></p>
-                </form>
-            </div>
-        </div>
-        <div id="emi-section" title="EMI" class="section">
-            <h2 class="section-title">EMI</h2>
-            <div class="emi">
-                <form name="emi-form">
-                    <div class="input-element">
-                        <label for="loan-amount">Loan Amout</label>
-                        <input type="number" id="loan-amount" class="loan-amount" name="loan-amount">
-                    </div>
-                    <div class="input-element">
-                        <label for="tenure">Tenure (in months)</label>
-                        <input type="number" id="tenure" class="tenure" name="tenure">
-                    </div>
-                    <div class="input-element">
-                        <label for="interest-rate">Interest Rate (%)</label>
-                        <input type="number" id="interest-rate" class="interest-rate" name="interest-rate">
-                    </div>
-                    <div class="cta-button">
-                        <button type="button" class="emi-button">Calculate</button>
-                        <input type="reset" title="Clear entries" value="Clear">
-                    </div>
-                    <p class="section-result" id="emi-result" title="EMI Result" align="center"></p>
-                </form>
-            </div>
-        </div>
-    </div>
-    
+    </main>
+
     <script src="scripts/cal-utility.js"></script>
 </body>
 

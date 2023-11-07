@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/global.css" />
+    <link rel="stylesheet" type="text/css" href="styles/bills-optimizer.css" />
+    <title>Bill Payment Strategy Optimizer</title>
+</head>
+
+<body>
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <div class="logo">
+                    <a class="logo-name" href="home.html">AKart</a>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a class="border" href="cal-utility.html">Utility Calcuator</a>
+                <a class="border" href="bills-optimizer.html">Bills Optimizer</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <h1>Bill Payment Strategy</h1>
+
+        <section class="main-section">
+            <form>
+                <div class="form-fields">
+                    <div class="form-field bill-values">
+                        <label for="bills">Bills (comma-separated)</label>
+                        <input type="text" id="bills"
+                            oninput="this.value = this.value.replace(/[^0-9,]/g, '').replace(/(\,,*?)\,,*/g, '$1');"
+                            required>
+                    </div>
+
+                    <div class="form-field wallet-values">
+                        <label for="balances">Wallet balances (comma-separated)</label>
+                        <input type="text" id="balances"
+                            oninput="this.value = this.value.replace(/[^0-9,]/g, '').replace(/(\,,*?)\,,*/g, '$1');"
+                            required>
+                    </div>
+
+                    <div class="form-field min-difference">
+                        <label for="min-difference">Minimum Difference</label>
+                        <input type="text" id="min-difference" value="10"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\*?)\*/g, '$1');">
+                    </div>
+
+                    <div class="form-field cal-button">
+                        <button type="button" class="button submit-button"
+                            onclick="calculateOptimalStrategies()">Calculate</button>
+                        <input type="reset" class="button clear-button" value="Clear" onclick="clearResults()">
+                    </div>
+                </div>
+            </form>
+
+            <div id="result-container" style="display: none;">
+                <div class="loader" id="loader"></div>
+                <table id="optimize-result"></table>
+                <div id="unpaid-bills-container"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="scripts/bills-optimizer.js"></script>
+</body>
+
+</html>

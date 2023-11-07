@@ -1,9 +1,3 @@
-html {
-  background-color: black;
-  font-family: system-ui;
-  color: white;
-}
-
 /* Basic CSS styling for the menu and sections */
 #menu {
   display: flex;
@@ -17,7 +11,7 @@ html {
   margin: 5px;
   cursor: pointer;
   padding: 15px;
-  background-color: #000000;
+  /* background-color: #000000; */
   border-radius: 20px;
 }
 
@@ -35,11 +29,12 @@ html {
 
 #sections .section {
   display: none;
-  background-color: #a51b87;
+  /* background-color: #a51b87; */
   padding: 20px;
   text-align: -webkit-auto;
   width: 50%;
-  border-radius: 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 div .input-element,
@@ -65,9 +60,9 @@ div .input-element,
 }
 
 button, input[type="reset"] {
-  padding: 15px;
-  border-radius: 28px;
-  background-color: white;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: cornflowerblue;
   cursor: pointer;
   border-style: none;
   width: max-content;
@@ -130,7 +125,7 @@ body {
 #mobile-menu {
   display: none;
   /* Hide the mobile menu by default */
-  background-color: #000000;
+  /* background-color: #000000; */
   text-align: center;
 }
 
@@ -156,9 +151,9 @@ body {
 #menu-list li {
   margin: 5px 0;
   padding: 15px;
-  background-color: #000000;
+  /* background-color: #312323; */
   border-radius: 20px;
-  color: white;
+  color: black;
   cursor: pointer;
 }
 
