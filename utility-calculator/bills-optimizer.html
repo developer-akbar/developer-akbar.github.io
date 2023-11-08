@@ -43,12 +43,6 @@
                             required>
                     </div>
 
-                    <div class="form-field min-difference">
-                        <label for="min-difference">Minimum Difference</label>
-                        <input type="text" id="min-difference" value="10"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\*?)\*/g, '$1');">
-                    </div>
-
                     <div class="form-field cal-button">
                         <button type="button" class="button submit-button"
                             onclick="calculateOptimalStrategies()">Calculate</button>

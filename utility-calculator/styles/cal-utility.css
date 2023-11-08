@@ -80,13 +80,6 @@ h2.section-title {
   text-align: center;
 }
 
-/* Default styles for all screen sizes */
-
-/* Add some space on top for better spacing */
-body {
-  margin-top: 20px;
-}
-
 /* Styles for small screens (phones) */
 @media (max-width: 600px) {
   #menu {
