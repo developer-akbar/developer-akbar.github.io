@@ -1,4 +1,7 @@
 function clearResults() {
+    if (window.outerWidth > 600) {
+        document.querySelector('FORM').style.width = '60%';
+    }
     document.getElementById('result-container').style.display = 'none';
 }
 
@@ -39,6 +42,7 @@ function calculateOptimalStrategies() {
         }
 
         setTimeout(() => {
+            document.querySelector('FORM').style.width = 'auto';
             displayOptimalStrategies(strategies);
         }, 500);
     } catch (err) {
@@ -52,9 +56,8 @@ function calculateOptimalStrategies() {
 }
 
 function displayError(err) {
-    loader.style.display = 'none';
-
     document.getElementById("result-container").style.width = '50%';
+    loader.style.display = 'none';
     const balanceContainer = document.getElementById("optimize-result");
     balanceContainer.style.display = 'inline-table';
     balanceContainer.innerHTML = "";
@@ -84,7 +87,7 @@ function findBestCombination(bills, walletBalance) {
     let bestCombination = [];
     let bestSum = 0;
     let allCombinations = [];
-    
+
     function findCombinationRecursive(index, currentCombination, currentSum) {
         if (currentSum <= walletBalance && currentCombination.length > bestCombination.length) {
             bestCombination = [...currentCombination];
@@ -166,7 +169,7 @@ function displayOptimalStrategies(strategies) {
         });
         setTimeout(() => {
             displayUnapidBills(unpaidBills, totalRemainingBalance);
-        }, 600);
+        }, 50);
     } catch (err) {
         displayError();
     }
