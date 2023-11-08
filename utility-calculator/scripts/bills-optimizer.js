@@ -20,7 +20,7 @@ function calculateOptimalStrategies() {
             alert("Please enter input values");
             return;
         }
-fsdfs
+
         document.getElementById('result-container').style.display = 'block';
         document.getElementById("loader").style.display = 'block';
 
