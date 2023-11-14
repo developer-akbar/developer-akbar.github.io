@@ -31,7 +31,7 @@ function calculateOptimalStrategies() {
 
         // Sort bills and wallets in descending order
         bills.sort((a, b) => b - a);
-        walletBalances.sort((a, b) => b - a);
+        //walletBalances.sort((a, b) => b - a);
 
         for (const walletBalance of walletBalances) {
             const bestCombination = findBestCombination(bills, walletBalance);
@@ -181,8 +181,10 @@ function displayUnapidBills(unpaidBills, totalRemainingBalance) {
     unpaidBillsContainer.style.display = 'block';
 
     if (unpaidBills.length > 0) {
+        unpaidBillsContainer.style.backgroundColor = 'red';
         unpaidBillsContainer.innerHTML += `<p>Unmatched bills: ${unpaidBills.join(", ")}. <br>Remaining wallets balance is ${totalRemainingBalance}</p?`;
     } else {
+        unpaidBillsContainer.style.backgroundColor = 'green';
         unpaidBillsContainer.innerHTML += `<p>Great! You covered all bills. <br>Remaining wallets balance is ${totalRemainingBalance}</p>`;
     }
 }
