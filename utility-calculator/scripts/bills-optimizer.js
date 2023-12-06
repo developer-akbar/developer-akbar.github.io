@@ -89,7 +89,7 @@ function findBestCombination(bills, walletBalance) {
     let allCombinations = [];
 
     function findCombinationRecursive(index, currentCombination, currentSum) {
-        if (currentSum <= walletBalance && currentCombination.length > bestCombination.length) {
+        if (currentSum <= walletBalance) {
             bestCombination = [...currentCombination];
             bestSum = currentSum;
 
