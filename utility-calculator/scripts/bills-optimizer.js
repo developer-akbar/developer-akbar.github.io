@@ -1,3 +1,12 @@
+const LOCAL_STORAGE_SAVED_STRATEGIES = 'saved-strategies';
+
+let localSavedStrategies = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_STRATEGIES)) ?? [];
+
+// displaying saved strategies on page load
+document.addEventListener('DOMContentLoaded', function () {
+    localSavedStrategies.map(r => document.querySelector('.saved-strategies').innerHTML += r);
+})
+
 function clearResults() {
     if (window.outerWidth > 600) {
         document.querySelector('FORM').style.width = '60%';
@@ -7,11 +16,10 @@ function clearResults() {
 
 function calculateOptimalStrategies() {
     try {
-        const optimizedResultContainer = document.getElementById("optimize-result");
-        optimizedResultContainer.style.display = 'none';
+        const optimizedStrategy = document.getElementById("optimized-strategy");
+        optimizedStrategy.style.display = 'none';
         const unpaidBillsContainer = document.getElementById("unpaid-bills-container");
         unpaidBillsContainer.style.display = 'none';
-
 
         const billsInput = document.getElementById("bills").value;
         let balancesInput = document.getElementById("balances").value;
@@ -40,6 +48,10 @@ function calculateOptimalStrategies() {
             // Remove bills used in the best combination from the array
             bills = bills.filter(bill => !bestCombination.includes(bill));
         }
+        localStorage.setItem('strategies', JSON.stringify(strategies)); // saving strategies to local storage
+
+        // const localStrategies = JSON.parse(localStorage.getItem('strategies'))
+        // const savedStrategy = localStrategies.find((strategy) => strategy.walletBalance == '2115');
 
         setTimeout(() => {
             document.querySelector('FORM').style.width = 'auto';
@@ -58,11 +70,11 @@ function calculateOptimalStrategies() {
 function displayError(err) {
     document.getElementById("result-container").style.width = '50%';
     loader.style.display = 'none';
-    const balanceContainer = document.getElementById("optimize-result");
-    balanceContainer.style.display = 'inline-table';
-    balanceContainer.innerHTML = "";
+    const optimizedStrategy = document.getElementById("optimized-strategy");
+    optimizedStrategy.style.display = 'inline-table';
+    optimizedStrategy.innerHTML = "";
 
-    balanceContainer.innerHTML += `<p>Something went wrong with strategy logic, unable to serve right now.</p>
+    optimizedStrategy.innerHTML += `<p>Something went wrong with strategy logic, unable to serve right now.</p>
     <p class="report-error" onclick="sendEmail('${err.message}')">Report this issue.</p>`;
 }
 
@@ -76,24 +88,20 @@ function sendEmail(err) {
     window.location.href = mailtoLink;
 
     setTimeout(() => {
-        const balanceContainer = document.getElementById("optimize-result");
-        balanceContainer.style.display = 'inline-table';
-        balanceContainer.innerHTML = "";
-        balanceContainer.innerHTML += `Thanks for reporting us the bug, we will fix it soon.`;
+        const optimizedStrategy = document.getElementById("optimized-strategy");
+        optimizedStrategy.style.display = 'inline-table';
+        optimizedStrategy.innerHTML = "";
+        optimizedStrategy.innerHTML += `Thanks for reporting us the bug, we will fix it soon.`;
     }, 2000);
 }
 
 function findBestCombination(bills, walletBalance) {
     let bestCombination = [];
-    let bestSum = 0;
     let allCombinations = [];
 
     function findCombinationRecursive(index, currentCombination, currentSum) {
         if (currentSum <= walletBalance) {
             bestCombination = [...currentCombination];
-            bestSum = currentSum;
-
-            // console.log('Best combinations: ', bestCombination, ' Sum: ', bestSum);
             allCombinations.push(bestCombination);
         }
 
@@ -109,21 +117,19 @@ function findBestCombination(bills, walletBalance) {
 
     findCombinationRecursive(0, [], 0);
 
-    // retrieving bestest combination amongst all combinations
+    // retrieving best combination amongst all combinations
     let maxSum = -1;
-    let bestestCombinationArray = [];
-
+    let bestCombinationArray = [];
     for (const combination of allCombinations) {
         const combinationSum = combination.reduce((acc, current) => acc + current, 0);
 
         if (combinationSum > maxSum) {
             maxSum = combinationSum;
-            bestestCombinationArray = combination;
+            bestCombinationArray = combination;
         }
     }
-    // console.log("The bestest combination: ", bestestCombinationArray);
 
-    return bestestCombinationArray;
+    return bestCombinationArray;
 }
 
 function displayOptimalStrategies(strategies) {
@@ -131,11 +137,12 @@ function displayOptimalStrategies(strategies) {
         loader.style.display = 'none';
 
         document.getElementById("result-container").style.width = '50%';
-        const balanceContainer = document.getElementById("optimize-result");
-        balanceContainer.style.display = 'inline-table';
-        balanceContainer.innerHTML = "";
+        const optimizedStrategy = document.getElementById("optimized-strategy");
+        optimizedStrategy.style.display = 'inline-table';
+        // balanceContainer.style.width = '100%';
+        optimizedStrategy.innerHTML = "";
 
-        balanceContainer.innerHTML += `<tr>
+        optimizedStrategy.innerHTML += `<tr>
         <th>Wallet</th>
         <th>Pay bills</th>
         <th>Balance</th>
@@ -145,7 +152,7 @@ function displayOptimalStrategies(strategies) {
         let totalRemainingBalance = 0;
         if (strategies.length > 0) {
             for (const strategy of strategies) {
-                balanceContainer.innerHTML += `<tr>
+                optimizedStrategy.innerHTML += `<tr>
                 <td>${strategy.walletBalance}</td>
                 <td>${strategy.combination.join(", ")} (${eval(strategy.combination.join("+")) || 'No bills matched'})</td>
                 <td>${strategy.walletBalance - eval(strategy.combination.join("+") || 0)}</td>
@@ -153,13 +160,15 @@ function displayOptimalStrategies(strategies) {
                 totalWalletBalance += strategy.walletBalance;
                 totalRemainingBalance += (strategy.walletBalance - eval(strategy.combination.join("+") || 0));
             }
-            balanceContainer.innerHTML += `<tr>
+            optimizedStrategy.innerHTML += `<tr>
             <td class="last-table-td">${totalWalletBalance}</td>
-            <td class="last-table-td"></td>
+            <td class="last-table-td">
+                <button type="button" class="button save-strategy" onclick="saveStrategy()">Save this strategy</button>
+            </td>
             <td class="last-table-td">${totalRemainingBalance}</td>
         </tr>`;
         } else {
-            balanceContainer.textContent = "No valid combinations found for any balance.";
+            optimizedStrategy.textContent = "No valid combinations found for any balance.";
         }
 
         var allBills = document.getElementById("bills").value.split(',');
@@ -168,14 +177,14 @@ function displayOptimalStrategies(strategies) {
             return !paidBills.includes(+paidBill);
         });
         setTimeout(() => {
-            displayUnapidBills(unpaidBills, totalRemainingBalance);
+            displayUnpaidBills(unpaidBills, totalRemainingBalance);
         }, 50);
     } catch (err) {
         displayError();
     }
 }
 
-function displayUnapidBills(unpaidBills, totalRemainingBalance) {
+function displayUnpaidBills(unpaidBills, totalRemainingBalance) {
     const unpaidBillsContainer = document.getElementById("unpaid-bills-container");
     unpaidBillsContainer.innerHTML = '';
     unpaidBillsContainer.style.display = 'block';
@@ -187,4 +196,61 @@ function displayUnapidBills(unpaidBills, totalRemainingBalance) {
         unpaidBillsContainer.style.backgroundColor = 'green';
         unpaidBillsContainer.innerHTML += `<p>Great! You covered all bills. <br>Remaining wallets balance is ${totalRemainingBalance}</p>`;
     }
+}
+
+// save strategies to local storage and display
+
+function saveStrategy() {
+    let currentTime = new Date().getTime();
+
+    var optimizedStrategy = document.getElementById('optimized-strategy').cloneNode(true);
+
+    optimizedStrategy.setAttribute('class', `saved-${optimizedStrategy.getAttribute('id')}`);
+    optimizedStrategy.setAttribute('id', `table-${currentTime}`);
+    optimizedStrategy.querySelector('.save-strategy').classList.add('delete-strategy');
+    optimizedStrategy.querySelector('.delete-strategy').classList.remove('save-strategy');
+    optimizedStrategy.querySelector('.delete-strategy').textContent = 'Delete this strategy';
+    optimizedStrategy.querySelector('.delete-strategy').setAttribute('onclick', 'deleteStrategy(this)');
+
+    document.querySelector('.saved-strategies').innerHTML += `<div class="strategy-wrapper"></div>`;
+    let lastAddedStrategyWrapper = [...document.querySelectorAll('.strategy-wrapper')].at(-1);
+    lastAddedStrategyWrapper.setAttribute('id', `strategy-wrapper-${currentTime}`);
+    lastAddedStrategyWrapper.innerHTML += `<span>Saved on ${new Date().toLocaleString()}</span>`;
+    lastAddedStrategyWrapper.innerHTML += `<button type="button" class="recalculate" onclick="recalculate(this)">Recalculate</button>`;
+    lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-bills" data-bills="${document.getElementById('bills').value}">`;
+    lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-balances" data-bills="${document.getElementById('balances').value}">`;
+    
+    var savedStrategy = new DOMParser().parseFromString(optimizedStrategy.outerHTML, "text/html").querySelector('.saved-optimized-strategy').outerHTML;
+    lastAddedStrategyWrapper.innerHTML += savedStrategy;
+
+    // saving to local storage
+    localSavedStrategies.unshift([...document.querySelectorAll('.strategy-wrapper')].at(-1).outerHTML);
+    localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
+}
+
+function deleteStrategy(thisElement) {
+    let savedStrategies1 = document.querySelector('.saved-strategies');
+    savedStrategies1.classList.add('deleting');
+
+    let strategyWrapper = thisElement.closest('.strategy-wrapper');
+    strategyWrapper.classList.add('delete-saved-strategy');
+
+    setTimeout(() => {
+        strategyWrapper.remove();
+        savedStrategies1.classList.remove('deleting');
+
+        const toBeDeletedStrategy = localSavedStrategies.find(r => r.includes(strategyWrapper.getAttribute('id')));
+        localSavedStrategies.indexOf(toBeDeletedStrategy);
+        localSavedStrategies.splice(localSavedStrategies.indexOf(toBeDeletedStrategy), 1);
+        localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
+    }, 500);
+}
+
+function recalculate(thisElement) {
+    console.log(thisElement);
+    let savedBills = thisElement.closest('.strategy-wrapper').querySelector('.input-bills').dataset.bills;
+    let savedBalances = thisElement.closest('.strategy-wrapper').querySelector('.input-balances').dataset.bills;
+
+    document.getElementById('bills').value = savedBills;
+    document.getElementById('balances').value = savedBalances;
 }
