@@ -11,7 +11,6 @@ h1 {
 
 form {
     margin: 20px;
-    /* text-align: -webkit-center; */
     width: 60%;
 }
 
@@ -22,7 +21,6 @@ label {
 
 input {
     padding: 10px;
-    /* margin: 5px; */
     min-width: 50%;
 }
 
@@ -53,12 +51,12 @@ input.clear-button:hover {
 }
 
 #result-container {
-    margin: 20px;
+    margin-block: 20px;
     text-align: -webkit-center;
     /* width: 50%; */
 }
 
-#optimize-result {
+#optimized-strategy, .saved-optimized-strategy {
     border: 1px solid #000;
     border-radius: 10px;
     padding: 10px;
@@ -66,10 +64,9 @@ input.clear-button:hover {
     box-shadow: 0 10px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#combination {
-    flex: 1;
-    border: 1px solid #000;
-    padding: 10px;
+.strategy-wrapper {
+    /* width: 49% !important; */
+    transition: all 0.3s ease, opacity 0.3s ease;
 }
 
 .form-fields {
@@ -78,7 +75,6 @@ input.clear-button:hover {
     flex-wrap: nowrap;
     flex-direction: column;
     gap: 20px;
-    /* width: 50%; */
     border: 1px solid #e2e7e6;
     border-radius: 10px;
     padding: 20px;
@@ -91,7 +87,7 @@ input.clear-button:hover {
     justify-content: space-between;
 }
 
-#optimize-result:empty {
+#optimized-strategy:empty {
     display: none;
 }
 
@@ -156,11 +152,34 @@ tr:hover {
     animation: loading 1s ease-in-out infinite;
 }
 
+.saved-strategies {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.delete-saved-strategy {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+.strategy-wrapper:not(.deleting) .delete-saved-strategy {
+    animation: adjustSavedStrategyTables 0.3s ease;
+}
+@keyframes adjustSavedStrategyTables {
+    from { transform: translateX(0); }
+    to {transform: translateX(0); }
+}
+
+.margin-block {
+    margin-block: 1rem;
+}
+
 @keyframes loading {
     from {
         transform: rotate(0trun);
     }
-
     to {
         transform: rotate(1turn);
     }
@@ -183,7 +202,11 @@ tr:hover {
         width: auto;
     }
 
-    #result-container {
-        width: auto !important;
+    #result-container, .saved-optimized-strategy {
+        width: 100% !important;
     }
-}
+
+    .saved-strategies {
+        grid-template-columns: auto;
+    }
+    }
