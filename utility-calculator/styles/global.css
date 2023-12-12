@@ -25,6 +25,14 @@ main {
     letter-spacing: 0.4px;
 }
 
+button[disabled] {
+    cursor: not-allowed;
+}
+
+button[disabled] {
+    box-shadow: unset !important;
+}
+
 .nav-logo {
     width: auto;
     height: 25px;
