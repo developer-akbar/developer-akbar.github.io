@@ -1,3 +1,37 @@
+function scrollToTop() {
+    window.scrollTo(0, 0);
+}
+
+document.addEventListener('scroll', () => {
+    var scrolled = window.pageYOffset || (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    if (scrolled > 799) {
+        document.querySelector('.scroll-to-top').style.display = 'block';
+    } else {
+        document.querySelector('.scroll-to-top').style.display = 'none';
+    }
+});
+
+const asGrid = document.querySelector('.as-grid');
+const asList = document.querySelector('.as-list');
+asGrid.addEventListener("click", () => {
+    document.querySelector('.saved-strategies').style.display = 'grid';
+    asList.classList.remove('active');
+    asGrid.classList.add('active');
+});
+asList.addEventListener("click", () => {
+    document.querySelector('.saved-strategies').style.display = 'unset';
+    asGrid.classList.remove('active');
+    asList.classList.add('active');
+});
+
+const textarea = document.querySelector('textarea');
+const textareaInitialHeight = parseInt(getComputedStyle(textarea).getPropertyValue('height'));
+textarea.addEventListener("input", () => {
+    textarea.style.height = `${textareaInitialHeight}px`;
+    const textareaNewHeight = textarea.scrollHeight - textareaInitialHeight;
+    textarea.style.height = `${textareaNewHeight}px`;
+})
+
 const LOCAL_STORAGE_SAVED_STRATEGIES = 'saved-strategies';
 
 let localSavedStrategies = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_STRATEGIES)) ?? [];
@@ -163,7 +197,7 @@ function displayOptimalStrategies(strategies) {
             optimizedStrategy.innerHTML += `<tr>
             <td class="last-table-td">${totalWalletBalance}</td>
             <td class="last-table-td">
-                <button type="button" class="button save-strategy" onclick="saveStrategy()">Save this strategy</button>
+                <button type="button" class="button save-strategy" onclick="saveStrategy(this)">Save this strategy</button>
             </td>
             <td class="last-table-td">${totalRemainingBalance}</td>
         </tr>`;
@@ -200,7 +234,10 @@ function displayUnpaidBills(unpaidBills, totalRemainingBalance) {
 
 // save strategies to local storage and display
 
-function saveStrategy() {
+function saveStrategy(thisElement) {
+    const btnCurrentText = thisElement.innerText;
+    thisElement.innerText = 'Please wait, saving strategy...';
+
     let currentTime = new Date().getTime();
 
     var optimizedStrategy = document.getElementById('optimized-strategy').cloneNode(true);
@@ -215,17 +252,22 @@ function saveStrategy() {
     document.querySelector('.saved-strategies').innerHTML += `<div class="strategy-wrapper"></div>`;
     let lastAddedStrategyWrapper = [...document.querySelectorAll('.strategy-wrapper')].at(-1);
     lastAddedStrategyWrapper.setAttribute('id', `strategy-wrapper-${currentTime}`);
-    lastAddedStrategyWrapper.innerHTML += `<span>Saved on ${new Date().toLocaleString()}</span>`;
-    lastAddedStrategyWrapper.innerHTML += `<button type="button" class="recalculate" onclick="recalculate(this)">Recalculate</button>`;
+    lastAddedStrategyWrapper.innerHTML += `<div class="info flex"><span>Saved on ${new Date().toLocaleString()}</span><button type="button" class="button recalculate" onclick="recalculate(this)">Recalculate</button></div>`;
     lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-bills" data-bills="${document.getElementById('bills').value}">`;
     lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-balances" data-bills="${document.getElementById('balances').value}">`;
-    
+
     var savedStrategy = new DOMParser().parseFromString(optimizedStrategy.outerHTML, "text/html").querySelector('.saved-optimized-strategy').outerHTML;
     lastAddedStrategyWrapper.innerHTML += savedStrategy;
 
-    // saving to local storage
-    localSavedStrategies.unshift([...document.querySelectorAll('.strategy-wrapper')].at(-1).outerHTML);
-    localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
+    setTimeout(() => {
+        // saving to local storage
+        localSavedStrategies.unshift([...document.querySelectorAll('.strategy-wrapper')].at(-1).outerHTML);
+        localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
+        
+        thisElement.innerText = 'Wooh!! Strategy saved. Calculate with new input';
+        thisElement.setAttribute('disabled', 'disabled');
+        thisElement.style.backgroundColor = 'grey';
+    }, 1000);
 }
 
 function deleteStrategy(thisElement) {
@@ -247,10 +289,13 @@ function deleteStrategy(thisElement) {
 }
 
 function recalculate(thisElement) {
-    console.log(thisElement);
     let savedBills = thisElement.closest('.strategy-wrapper').querySelector('.input-bills').dataset.bills;
     let savedBalances = thisElement.closest('.strategy-wrapper').querySelector('.input-balances').dataset.bills;
 
     document.getElementById('bills').value = savedBills;
     document.getElementById('balances').value = savedBalances;
+
+    // let mainSectionHeight = document.querySelector('.main-section').getBoundingClientRect().x;
+    // window.scrollTo(0, mainSectionHeight);
+    document.getElementById('bills').focus();
 }
