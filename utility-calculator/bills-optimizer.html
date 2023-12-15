@@ -23,9 +23,58 @@
                 <a class="border" href="bills-optimizer.html">Bills Optimizer</a>
             </div>
         </div>
+        <div class="scroll-indicator"></div>
     </header>
     <main>
-        <h1>Bill Payment Strategy</h1>
+        <div class="flex justify-center">
+            <h1 class="main-heading">Bill Payment Strategy</h1>
+            <i class="fa-solid fa-circle-info collapsible" title="About"></i>            
+        </div>
+        <div class="collapsible-content about-bill-optimizer">
+            <p class="about-description">Welcome to the Bill Payment Optimizer! This tool helps you efficiently manage your bills and digital wallet balances.
+            Enter your bills and wallet balances, and let the optimizer tool suggest an optimal payment strategy for you.
+            It calculates the best way to  pay your bills from your available wallets, minimizing additional expenses from your pocket</p>
+            <h3>Key Features:</h3>
+            <ol>
+                <li>Optimize Payments:
+                    <ul>
+                        <li>Input your bills and wallet balances.</li>
+                        <li>Click "Optimize" button to receive a strategy that minimized out-of-pocket expenses</li>
+                        <li>See a breakdown of which bills are paid from each wallet.</li>
+                    </ul>
+                </li>
+                <li>Save Strategies:
+                    <ul>
+                        <li>Save your optimized payment strategy results for the future reference</li>
+                        <li>Easily recall and view your saved strategies in the dedicated "Saved Strategies" section.</li>
+                    </ul>
+                </li>
+                <li>Recalculate Anytime:
+                    <ul>
+                        <li>At any point, recalculate a saved strategy to adapt to changes in your bills.</li>
+                    </ul>
+                </li>
+                <li>Delete Strategies:
+                    <ul>
+                        <li>Remove saved strategy if you no longer need with the delete option</li>
+                    </ul>
+                </li>
+            </ol>
+            <h3>How to use:</h3>
+            <ol>
+                <li>Enter your bills, separating them with commas.</li>
+                <li>Enter your digital wallet balances, separated by commas.</li>
+                <li>Click the "Optimize" button.</li>
+                <li>The tool will provide a details strategy, showing which bill amounts are paid from each wallet.</li>
+                <li>Save the resulted strategy for future use or delete it when no longer needed.</li>
+                <li>Easily access and recalculate saved strategies from the "Saved Strategies" section.</li>
+            </ol>
+            <div class="center-content">
+                <button class="button small-button collapsible">Close</button>
+            </div>
+            
+        </div>
+        
         <section class="main-section">
             <form>
                 <div class="form-fields">
@@ -53,7 +102,7 @@
 
                     <div class="form-field cal-button">
                         <button type="button" class="button submit-button"
-                            onclick="calculateOptimalStrategies()">Calculate</button>
+                            onclick="calculateOptimalStrategies()">Optimize</button>
                         <input type="reset" class="button clear-button" value="Clear" onclick="clearResults()">
                     </div>
                 </div>
@@ -66,8 +115,8 @@
             </div>
         </section>
 
-        <div class="flex center">
-            <h3 class="margin-block">Saved Strategies</h3>
+        <div class="saved-strategies-heading flex align-center">
+            <h2 class="margin-block">Saved Strategies</h2>
             <div class="flex margin-inline view-as">
                 <i class="fa-solid fa-table-cells-large as-grid active" title="View as grid"></i>        
                 <i class="fa-solid fa-bars as-list" title="View as list"></i>
@@ -76,7 +125,7 @@
         <div class="saved-strategies">
         </div>
 
-        <button class="button scroll-to-top" onclick="scrollToTop()">Scroll to top</button>
+        <button class="button small-button scroll-to-top" onclick="scrollToTop()">Scroll to top</button>
     </main>
 
     <script src="scripts/bills-optimizer.js"></script>
