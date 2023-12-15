@@ -4,33 +4,50 @@ function scrollToTop() {
 
 document.addEventListener('scroll', () => {
     var scrolled = window.pageYOffset || (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    
+    // setting header shadow to separate from body content
+    if(scrolled > 20) {
+        document.querySelector('header').style.boxShadow = 'var(--box-shadow)';
+    } else {
+        document.querySelector('header').style.boxShadow = 'unset';
+    }
+
+    // toggling scroll to top button when certain scroll to bottom
     if (scrolled > 799) {
         document.querySelector('.scroll-to-top').style.display = 'block';
     } else {
         document.querySelector('.scroll-to-top').style.display = 'none';
     }
+
+    // adding scroll indicator to indicate how much percentage of the content scrolled
+    const scrollPercentage = (scrolled / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100);
+    document.querySelector('.scroll-indicator').style.width = `${scrollPercentage}%`;
 });
 
 const asGrid = document.querySelector('.as-grid');
 const asList = document.querySelector('.as-list');
 asGrid.addEventListener("click", () => {
     document.querySelector('.saved-strategies').style.display = 'grid';
+    document.querySelector('.saved-strategies').classList.remove('list');
     asList.classList.remove('active');
     asGrid.classList.add('active');
 });
 asList.addEventListener("click", () => {
     document.querySelector('.saved-strategies').style.display = 'unset';
+    document.querySelector('.saved-strategies').classList.add('list');
     asGrid.classList.remove('active');
     asList.classList.add('active');
 });
 
-const textarea = document.querySelector('textarea');
-const textareaInitialHeight = parseInt(getComputedStyle(textarea).getPropertyValue('height'));
-textarea.addEventListener("input", () => {
-    textarea.style.height = `${textareaInitialHeight}px`;
-    const textareaNewHeight = textarea.scrollHeight - textareaInitialHeight;
-    textarea.style.height = `${textareaNewHeight}px`;
-})
+const textareaEls = document.querySelectorAll('textarea');
+textareaEls.forEach(textarea => {
+    const textareaInitialHeight = parseInt(getComputedStyle(textarea).getPropertyValue('height'));
+    textarea.addEventListener("input", () => {
+        textarea.style.height = `${textareaInitialHeight}px`;
+        const textareaNewHeight = textarea.scrollHeight - textareaInitialHeight;
+        textarea.style.height = `${textareaNewHeight}px`;
+    })
+});
 
 const LOCAL_STORAGE_SAVED_STRATEGIES = 'saved-strategies';
 
@@ -39,6 +56,7 @@ let localSavedStrategies = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SAVED_S
 // displaying saved strategies on page load
 document.addEventListener('DOMContentLoaded', function () {
     localSavedStrategies.map(r => document.querySelector('.saved-strategies').innerHTML += r);
+    handleSavedStrategiesHeading();
 })
 
 function clearResults() {
@@ -227,7 +245,7 @@ function displayUnpaidBills(unpaidBills, totalRemainingBalance) {
         unpaidBillsContainer.style.backgroundColor = 'red';
         unpaidBillsContainer.innerHTML += `<p>Unmatched bills: ${unpaidBills.join(", ")}. <br>Remaining wallets balance is ${totalRemainingBalance}</p?`;
     } else {
-        unpaidBillsContainer.style.backgroundColor = 'green';
+        unpaidBillsContainer.style.backgroundColor = '#30a630b3';
         unpaidBillsContainer.innerHTML += `<p>Great! You covered all bills. <br>Remaining wallets balance is ${totalRemainingBalance}</p>`;
     }
 }
@@ -252,9 +270,11 @@ function saveStrategy(thisElement) {
     document.querySelector('.saved-strategies').innerHTML += `<div class="strategy-wrapper"></div>`;
     let lastAddedStrategyWrapper = [...document.querySelectorAll('.strategy-wrapper')].at(-1);
     lastAddedStrategyWrapper.setAttribute('id', `strategy-wrapper-${currentTime}`);
-    lastAddedStrategyWrapper.innerHTML += `<div class="info flex"><span>Saved on ${new Date().toLocaleString()}</span><button type="button" class="button recalculate" onclick="recalculate(this)">Recalculate</button></div>`;
+    lastAddedStrategyWrapper.innerHTML += `<div class="info flex"><span class="saved-on">Saved on ${new Date().toLocaleString()}</span><button type="button" class="button recalculate" onclick="recalculate(this)">Recalculate</button></div>`;
     lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-bills" data-bills="${document.getElementById('bills').value}">`;
     lastAddedStrategyWrapper.innerHTML += `<input type="hidden" class="input-balances" data-bills="${document.getElementById('balances').value}">`;
+
+    handleSavedStrategiesHeading();
 
     var savedStrategy = new DOMParser().parseFromString(optimizedStrategy.outerHTML, "text/html").querySelector('.saved-optimized-strategy').outerHTML;
     lastAddedStrategyWrapper.innerHTML += savedStrategy;
@@ -263,8 +283,8 @@ function saveStrategy(thisElement) {
         // saving to local storage
         localSavedStrategies.unshift([...document.querySelectorAll('.strategy-wrapper')].at(-1).outerHTML);
         localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
-        
-        thisElement.innerText = 'Wooh!! Strategy saved. Calculate with new input';
+
+        thisElement.innerText = 'Woohoo!! Strategy saved. Calculate with new input';
         thisElement.setAttribute('disabled', 'disabled');
         thisElement.style.backgroundColor = 'grey';
     }, 1000);
@@ -284,6 +304,7 @@ function deleteStrategy(thisElement) {
         const toBeDeletedStrategy = localSavedStrategies.find(r => r.includes(strategyWrapper.getAttribute('id')));
         localSavedStrategies.indexOf(toBeDeletedStrategy);
         localSavedStrategies.splice(localSavedStrategies.indexOf(toBeDeletedStrategy), 1);
+        handleSavedStrategiesHeading();
         localStorage.setItem(LOCAL_STORAGE_SAVED_STRATEGIES, JSON.stringify(localSavedStrategies));
     }, 500);
 }
@@ -293,9 +314,22 @@ function recalculate(thisElement) {
     let savedBalances = thisElement.closest('.strategy-wrapper').querySelector('.input-balances').dataset.bills;
 
     document.getElementById('bills').value = savedBills;
-    document.getElementById('balances').value = savedBalances;
-
-    // let mainSectionHeight = document.querySelector('.main-section').getBoundingClientRect().x;
-    // window.scrollTo(0, mainSectionHeight);
+    document.getElementById('balances').value = savedBalances;    
     document.getElementById('bills').focus();
+}
+
+document.querySelectorAll('.collapsible').forEach(collapsible => {
+    collapsible.addEventListener("click", () => {
+        document.querySelector('.fa-circle-info.collapsible').classList.toggle('active');
+        let collapsibleContent = document.querySelector('.collapsible-content');
+        collapsibleContent.classList.toggle('active');
+    });
+});
+
+function handleSavedStrategiesHeading() {
+    if(document.querySelector('.saved-strategies').childElementCount == 0) {
+        document.querySelector('.saved-strategies-heading').style.display = 'none';
+    } else {
+        document.querySelector('.saved-strategies-heading').style.display = 'flex'; 
+    }
 }
