@@ -20,8 +20,8 @@ document.addEventListener('scroll', () => {
     }
 
     // adding scroll indicator to indicate how much percentage of the content scrolled
-    const scrollPercentage = (scrolled / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100);
-    document.querySelector('.scroll-indicator').style.width = `${scrollPercentage}%`;
+    // const scrollPercentage = (scrolled / (document.documentElement.scrollHeight - document.documentElement.clientHeight) * 100);
+    // document.querySelector('.scroll-indicator').style.width = `${scrollPercentage}%`;
 });
 
 const asGrid = document.querySelector('.as-grid');
