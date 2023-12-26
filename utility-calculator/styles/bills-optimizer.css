@@ -302,6 +302,22 @@ tr:hover {
     text-wrap: balance;
 }
 
+.scroll-indicator {
+    height: 5px;
+    top: 0;
+    z-index: 1000;
+    background-color: lime;
+    width: 100%;
+    scale: 0 1;
+    transform-origin: left;
+    animation: scroll-indication linear;
+    animation-timeline: scroll();
+}
+
+@keyframes scroll-indication {
+    to { scale: 1 1; }
+}
+
 @media (min-width: 768px) {
     /* applying style not on list view but on grid view */
     .saved-strategies:not(.list) .strategy-wrapper:not(:hover) {
