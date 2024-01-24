@@ -1,0 +1,325 @@
+* {
+    margin: 0;
+    font-family: Roboto, Arial, sans-serif;
+    box-sizing: border-box;
+    line-height: 1.6;
+}
+
+body {
+    /* background-color: hsl(33, 20%, 15%); */
+    /* background-color: #28292a; */
+    background-color: #000509ed;
+    color: white;
+}
+
+.primary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    height: 5rem;
+    position: relative;
+}
+
+.primary-header > * {
+    flex: 1;
+    max-width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.primary-header .nav-user-location {
+    justify-content: flex-start;
+    padding-left: 5px;
+}
+
+.primary-header .calendar {
+    justify-content: flex-end;
+    padding-right: 5px;
+}
+
+.user-location {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.location-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-location .fa-location-dot {
+    font-size: 1.5rem;
+}
+
+.loc-area {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: fixed;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: 200ms ease-in-out;
+    border: 1px solid white;
+    border-radius: 10px;
+    z-index: 99;
+    background-color: black;
+    width: 500px;
+    max-width: 70%;
+    padding: 1rem;
+}
+
+.user-location-modal {
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.user-location-modal.active {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.current-location {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+}
+
+input.custom-user-location {
+    padding: 2px 10px;
+    width: 100%;
+}
+
+#overlay {
+    position: fixed;
+    opacity: 0;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+#overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.nav-logo {
+    text-align: center;
+}
+
+.logo-image {
+    width: 5rem;
+}
+
+.fa-mosque {
+    font-size: 3rem;
+    color: mediumspringgreen;
+}
+
+.current-prayer-waqt {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    font-size: 2rem;
+    font-weight: bold;
+    height: 10rem;
+    background-color: #497c8c;
+    border-radius: 0.8rem;
+}
+
+.current-waqt {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.current-waqt::after {
+    content: 'Now';
+    position: absolute;
+    font-size: 0.75rem;
+    right: -32px;
+    top: 0;
+    color: red;
+    text-shadow: 1px 1px 10px black;
+}
+
+.current-prayer-waqt .method-name,
+.next-waqt-countdown {
+    font-size: .8rem;
+    align-self: self-start;
+    margin: 0.8rem;
+    color: #c2e7ff;
+}
+
+.next-waqt-countdown {
+    color: white !important;
+}
+
+.next-waqt-down {
+    font-size: 1rem;
+}
+
+.adhan-timings {
+    display: none;
+    margin-block: 1rem;
+}
+
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* outline: 2px solid limegreen; */
+    width: 100%;
+}
+
+.calendar-day .today {
+    background-color: orange;
+}
+
+.calendar-day:has(.today) {
+    font-weight: 700;
+    /* outline: 2px solid orange; */
+}
+
+.calendar-date {
+    position: relative;
+}
+
+.calendar-date:empty {
+    display: none;
+}
+
+.calendar-prev-day,
+.calendar-next-day {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) !important;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.calendar-prev-day {
+    left: .5rem;
+}
+
+.calendar-next-day {
+    right: .5rem;
+}
+
+.calendar-prev-day:active,
+.calendar-next-day:active {
+    color: #a41970;
+}
+
+.calendar-date .readable-date {
+    font-size: 1.175rem;
+    font-weight: 700;
+}
+
+.prayer-times {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    padding: 1em;
+    height: 100%;
+}
+
+.prayer-time {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem;
+    font-weight: 700;
+    background-color: green;
+    border-radius: .5em;
+    padding-inline: 1em;
+}
+
+.prayer-time>span {
+    width: 50%;
+}
+
+.prayer-time>span:first-child {
+    text-align: left;
+}
+
+
+.prayer-time>span:last-child {
+    text-align: right;
+}
+
+.prayer-time.current-prayer-time {
+    background-color: orange;
+    font-size: 1.375rem;
+}
+
+.specific-period.active {
+    display: block;
+}
+
+.adhan-timings.active {
+    display: flex;
+    min-height: 500px;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0.5em;
+    background-color: rgb(255 255 255 / 0.05);
+    width: 100%;
+    font-size: 1rem;
+    position: fixed;
+    bottom: 0;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 9999;
+}
+
+.copyright {
+    /* font-weight: 900; */
+    font-size: .8rem;
+}
+
+.author-name {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 1rem;
+    font-weight: 700;
+    padding-inline: 5px;
+    text-shadow: 1px 1px 6px rgb(0 133 255);
+}
+
+@media (max-width : 768px) {
+
+    html,
+    body {
+        height: 100dvh;
+        height: calc(var(--dvh, 1dvh) * 100);
+    }
+
+    .adhan-timings {
+        grid-template-columns: 1fr;
+    }
+
+    .prayer-times {
+        flex-direction: column;
+    }
+}

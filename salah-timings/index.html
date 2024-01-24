@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="styles/adhantimings.css" />
+    <link rel="stylesheet" href="styles/calendar.css" />
+    <link rel="icon" type="image/png" sizes="32x32" href="images/mosque_logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/mosque_logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="images/mosque_logo.png">
+    <script src="scripts/adhantimings.js" defer></script>
+    <script src="scripts/calendar.js" defer></script>
+    <title>Prayer Timings</title>
+</head>
+
+<body>
+    <header class="primary-header">
+        <div class="nav-user-location">
+            <div class="user-location" data-modal-target="#user-location-modal">
+                <i class="fa-solid fa-location-dot"></i>
+                <div class="location-details"></div>
+            </div>
+        </div>
+        <div class="nav-logo">
+            <img src="images/mosque_logo.png" alt="logo" class="logo-image">
+        </div>
+        <div class="calendar">
+            <label for="show-calendar" class="show-calendar">
+                <i class="show-calendar fa-solid fa-calendar-days"></i>
+            </label>
+            <input type="checkbox" name="show-calendar" id="show-calendar">
+        </div>
+    </header>
+
+    <main>
+        <div class="current-prayer-waqt">
+            <p class="method-name"></p>
+        </div>
+
+        <!-- <h2 align="center">Adhan Timings</h2> -->
+        <div class="adhan-timings active">
+            <div class="calendar-day">
+                <div class="calendar-date">
+                    <p class="readable-date"></p>
+                    <p class="hijri-date"></p>
+                    <span class="calendar-prev-day" title="Previous Day">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </span>
+                    <span class="calendar-next-day" title="Next Day">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </span>
+                </div>
+                <div class="prayer-times"></div>
+            </div>
+        </div>
+
+        <div id="calendar-container"></div>
+
+        <div id="user-location-modal" class="user-location-modal popup">
+            <input type="text" name="" id="" class="custom-user-location" placeholder="Search location">
+            <div class="current-location"><i class="fa-solid fa-location-crosshairs"></i>Current location</div>
+        </div>
+
+        <div id="overlay"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="copyright">
+            <p>A project by <span class="author-name">Akbar</span></p>
+        </div>
+    </footer>
+</body>
+
+</html>
