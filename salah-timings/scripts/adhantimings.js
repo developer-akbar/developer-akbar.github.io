@@ -8,7 +8,7 @@ const adhanTimings = document.querySelector('.adhan-timings');
 const prayerTimes = document.querySelector('.prayer-times');
 const overlay = document.getElementById('overlay');
 
-adhanTimings.style.height = `${document.querySelector('body').clientHeight - document.querySelector('footer').clientHeight - adhanTimings.offsetTop - 16}px`;
+adhanTimings.style.height = `${document.querySelector('body').clientHeight - document.querySelector('footer').clientHeight - adhanTimings.offsetTop}px`;
 
 getAdhanTimings(formatDate(new Date())); // on page load for current date
 
@@ -61,7 +61,7 @@ async function getUserLocation() {
         console.time('Location Api Response Time');
 
         position = await requestPoistion();
-        const {latitude, longitude} = position.coords;
+        const { latitude, longitude } = position.coords;
         // const latitude = 14.1232565;
         // const longitude = 79.2043402;
         // const latitude = 14.193148;
@@ -113,7 +113,7 @@ function displayPrayerTimes(prayerTimesData) {
     document.querySelector('.calendar-prev-day').setAttribute('data-date-tracking', formatDate(new Date(selectedDate).getTime() - 86400000));
     document.querySelector('.calendar-next-day').setAttribute('data-date-tracking', formatDate(new Date(selectedDate).getTime() + 86400000));
 
-    document.querySelector('.current-prayer-waqt .method-name').textContent = `Source: ${prayerTimesData.meta.method.name}`;
+    // document.querySelector('.method-name').textContent = `Source: ${prayerTimesData.meta.method.name}`;
 
     Object.entries(prayerTimesData.timings).map(prayerTime => {
         let waqtName = prayerTime[0].toLowerCase();
@@ -121,13 +121,14 @@ function displayPrayerTimes(prayerTimesData) {
             prayerTimes.innerHTML += `<div class="prayer-time"></div>`;
             let lastPrayerTime = [...document.querySelectorAll('.prayer-time')].at(-1);
             let time = prayerTime[1].replace(/[^0-9:]/g, '');
-            lastPrayerTime.innerHTML += `<span class="${waqtName}">${prayerTime[0]}</span> <span class="${waqtName}-time" data-waqt-tracking="${time}:00">${withTimeFormat(time)}</span>`;
+            lastPrayerTime.innerHTML += `<span class="${waqtName} ${waqtName === 'sunrise' ? 'not-a-prayer' : ''}">${prayerTime[0]}</span> <span class="${waqtName}-time" data-waqt-tracking="${time}:00">${withTimeFormat(time)}</span>`;
 
         }
     });
 
     if (today) {
         addCurrentPrayerTimeClass();
+        updateCurrentWaqtContainer();
     }
 }
 
@@ -142,7 +143,7 @@ function requestPoistion() {
     return new Promise(function (resolve, reject) {
         navigator.geolocation.getCurrentPosition(
             pos => { resolve(pos); },
-            err => { reject(pos); },
+            err => { reject(err); },
             options);
     });
 }
@@ -172,7 +173,11 @@ function addCurrentPrayerTimeClass() {
             : allPrayerTimeElements[0].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking');
 
         if (isCurrentPrayerTimeRunning(currentTimeString, waqtStartTime, waqtEndTime) || isIsha) {
-            allPrayerTimeElements[i].classList.add('current-prayer-time');
+            if(allPrayerTimeElements[i].querySelector('.prayer-time span:first-child').classList.contains('sunrise')) {
+                allPrayerTimeElements[2].classList.add('current-prayer-time'); // not setting class for Sunrise
+            } else {
+                allPrayerTimeElements[i].classList.add('current-prayer-time');
+            }
             break;
         }
     }
@@ -187,6 +192,9 @@ function addCurrentPrayerTimeClass() {
 }
 
 function updateCurrentWaqtContainer() {
+    const currentPrayerTime = document.querySelector('.prayer-times .prayer-time.current-prayer-time');
+    const currentWaqtName = currentPrayerTime != undefined ? currentPrayerTime.firstChild.textContent : '';
+
     const allPrayerTimeElements = document.querySelectorAll('.prayer-time');
     let currentDate = new Date();
     let currentTimeString = currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
@@ -194,58 +202,94 @@ function updateCurrentWaqtContainer() {
     let nextPrayerIndex = -1;
 
     for (let i = 0; i <= allPrayerTimeElements.length - 1; i++) {
+        
         let nextPrayerTime = new Date('2000-01-01 ' + allPrayerTimeElements[i].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking'));
         let currentTime = new Date('2000-01-01 ' + currentTimeString);
-
+        
+        // if(currentWaqtName.toLowerCase() === 'isha') nextPrayerTime = new Date(formatDate(nextPrayerTime.setDate(nextPrayerTime.getDate() + 1)));
+        
         if (nextPrayerTime > currentTime) {
             nextPrayerIndex = i;
             break;
         }
     }
 
-    const currentPrayerwaqtElement = document.querySelector('.current-prayer-waqt');
+    const currentPrayerWaqtElement = document.querySelector('.current-prayer-waqt');
 
-    const currentPrayerTime = document.querySelector('.prayer-times .prayer-time.current-prayer-time');
-    const currentWaqtName = currentPrayerTime != undefined ? currentPrayerTime.firstChild.textContent : '';
+    // adding dynamic background image for current prayer
+    currentPrayerWaqtElement.style.backgroundImage = `url('../images/hero_image_${currentWaqtName}.jpg')`;
 
     const currentWaqtNameElement = document.createElement('div');
-    currentWaqtNameElement.textContent = currentWaqtName;
+    currentWaqtNameElement.textContent = currentWaqtName.toLowerCase() !== 'sunrise' ? currentWaqtName : 'Dhuhr';
     currentWaqtNameElement.classList.add('current-waqt');
+    currentWaqtNameElement.setAttribute('data-when', currentWaqtName.toLowerCase() !== 'sunrise' ? 'Now' : 'Next');
 
-    currentPrayerwaqtElement.appendChild(currentWaqtNameElement);
+    currentPrayerWaqtElement.innerHTML = ''; // Clear existing content
+    currentPrayerWaqtElement.appendChild(currentWaqtNameElement);
+
+    // Clear any existing intervals
+    clearInterval(currentPrayerWaqtElement.interval);
 
     if (nextPrayerIndex != -1) {
         var nextPrayerTime = new Date('2000-01-01 ' + allPrayerTimeElements[nextPrayerIndex].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking'));
         let currentTime = new Date('2000-01-01 ' + currentTimeString);
 
+        // Calculate the remaining time in milliseconds
         var timeDiff = nextPrayerTime - currentTime;
 
-        const nextWaqtCountdownSpanElement = document.createElement('span');
-        setInterval(() => {
-            timeDiff -= 1000;
-            var hours = Math.floor(timeDiff / (1000 * 60 * 60))
+        const nextWaqtCountdownSpanElement = document.createElement('span');        
+
+        // Start a new interval and store its ID
+        currentPrayerWaqtElement.interval = setInterval(() => {
+            handleCountdown();
+        }, 1000);
+
+        // trigger the interval immediately to update the countdown without waiting for the first second to elapse
+        handleCountdown();
+
+        function handleCountdown() {
+            // Calculate hours, minutes, and seconds from the remaining time
+            var hours = Math.floor(timeDiff / (1000 * 60 * 60));
             var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
             nextWaqtCountdownSpanElement.textContent = 'Next prayer in -' + hours + ':' + minutes + ':' + seconds;
             nextWaqtCountdownSpanElement.classList.add('next-waqt-countdown');
 
             if (seconds > 0) {
-                currentPrayerwaqtElement.appendChild(nextWaqtCountdownSpanElement);
+                currentPrayerWaqtElement.appendChild(nextWaqtCountdownSpanElement);
             }
+
+            // Update the remaining time
+            timeDiff -= 1000;
 
             // clearing previous waqt name and countdown when it finishes
             if (hours == 0 && minutes == 0 && seconds == 0) {
                 currentPrayerTime.classList.remove('current-prayer-time');
+                clearInterval(currentPrayerWaqtElement.interval); // Clear the interval when the countdown reaches zero
                 nextWaqtCountdownSpanElement.remove();
                 document.querySelector('.current-waqt').remove();
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
-
             }
-        }, 1000);
+        }
     }
-
 }
+
+
+// Check visibility state when the page becomes visible or hidden
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'visible') {
+        // Updating prayer times with correct day when previous day finished
+        if(new Date(document.querySelector('.readable-date').textContent).toDateString() !== new Date().toDateString()) {
+            getAdhanTimings(formatDate(new Date()));
+        }
+        // Update the timer and current prayer time when the page becomes visible
+        document.querySelector('.current-prayer-time').classList.remove('current-prayer-time');
+        addCurrentPrayerTimeClass();
+        updateCurrentWaqtContainer();
+    }
+});
 
 var observerCallback = function (mutationList, observer) {
     if (document.querySelector('.next-waqt-countdown') != undefined)
@@ -383,8 +427,8 @@ function displayError(flag) {
 }
 
 function getLocalArea(address) {
-    if(address.hasOwnProperty('neighbourhood') && address.neighbourhood) return address.neighbourhood;
-    else if(address.hasOwnProperty('village') && address.village) return address.village;
-    else if(address.hasOwnProperty('county') && address.county) return address.county;
-    else if(address.hasOwnProperty('road') && address. road) return address.road;
+    if (address.hasOwnProperty('neighbourhood') && address.neighbourhood) return address.neighbourhood;
+    // else if (address.hasOwnProperty('village') && address.village) return address.village;
+    else if (address.hasOwnProperty('county') && address.county) return address.county;
+    else if (address.hasOwnProperty('road') && address.road) return address.road;
 }

@@ -6,10 +6,11 @@
 }
 
 body {
-    /* background-color: hsl(33, 20%, 15%); */
-    /* background-color: #28292a; */
     background-color: #000509ed;
     color: white;
+    height: 100dvh;
+    background-image: url('../images/background_image.jpg');
+    background-size: cover;
 }
 
 .primary-header {
@@ -20,7 +21,7 @@ body {
     position: relative;
 }
 
-.primary-header > * {
+.primary-header>* {
     flex: 1;
     max-width: 33%;
     display: flex;
@@ -130,14 +131,16 @@ input.custom-user-location {
 
 .current-prayer-waqt {
     display: flex;
-    /* justify-content: center; */
     align-items: center;
     flex-direction: column;
     font-size: 2rem;
     font-weight: bold;
-    height: 10rem;
-    background-color: #497c8c;
+    height: 250px;
+    background-image: url('../images/hero_image_sunrise.jpg');
+    background-size: cover;
+    background-position: center center;
     border-radius: 0.8rem;
+    position: relative;
 }
 
 .current-waqt {
@@ -148,7 +151,7 @@ input.custom-user-location {
 }
 
 .current-waqt::after {
-    content: 'Now';
+    content: attr(data-when);
     position: absolute;
     font-size: 0.75rem;
     right: -32px;
@@ -161,12 +164,13 @@ input.custom-user-location {
 .next-waqt-countdown {
     font-size: .8rem;
     align-self: self-start;
-    margin: 0.8rem;
+    padding: 5px;
     color: #c2e7ff;
 }
 
 .next-waqt-countdown {
     color: white !important;
+    background-color: rgba(16, 12, 12, 0.7);
 }
 
 .next-waqt-down {
@@ -182,17 +186,15 @@ input.custom-user-location {
     display: flex;
     flex-direction: column;
     text-align: center;
-    /* outline: 2px solid limegreen; */
     width: 100%;
 }
 
 .calendar-day .today {
-    background-color: orange;
+    background-color: #ffa500d6;
 }
 
 .calendar-day:has(.today) {
     font-weight: 700;
-    /* outline: 2px solid orange; */
 }
 
 .calendar-date {
@@ -232,6 +234,7 @@ input.custom-user-location {
 
 .prayer-times {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     flex-wrap: wrap;
     padding: 1em;
@@ -245,7 +248,7 @@ input.custom-user-location {
     align-items: center;
     padding: 0.25rem;
     font-weight: 700;
-    background-color: green;
+    background-color: #00800082;
     border-radius: .5em;
     padding-inline: 1em;
 }
@@ -264,7 +267,7 @@ input.custom-user-location {
 }
 
 .prayer-time.current-prayer-time {
-    background-color: orange;
+    background-color: #ffa500d6;
     font-size: 1.375rem;
 }
 
@@ -274,7 +277,7 @@ input.custom-user-location {
 
 .adhan-timings.active {
     display: flex;
-    min-height: 500px;
+    min-height: 30dvh;
 }
 
 .footer {
@@ -307,19 +310,24 @@ input.custom-user-location {
     text-shadow: 1px 1px 6px rgb(0 133 255);
 }
 
-@media (max-width : 768px) {
+/* better experience indicator */
+#landscape-message {
+    display: none;
+    position: fixed;
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+}
 
-    html,
-    body {
-        height: 100dvh;
-        height: calc(var(--dvh, 1dvh) * 100);
-    }
+@media screen and (orientation: landscape) {
 
-    .adhan-timings {
-        grid-template-columns: 1fr;
-    }
-
-    .prayer-times {
-        flex-direction: column;
+    #landscape-message {
+        display: block;
     }
 }

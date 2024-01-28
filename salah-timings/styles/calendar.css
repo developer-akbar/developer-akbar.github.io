@@ -28,6 +28,16 @@ button:hover {
     background-color: #383a45;
 }
 
+.current-day-btn {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.current-day-btn:hover {
+    background-color: #383a45;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -111,4 +121,10 @@ td:hover:not(.current-day) {
     display: flex;
     flex-direction: column;
     margin: 1rem 2rem;
+}
+
+@media (min-width : 412px) {
+    tr:first-child th.week-day {
+        width: 100%;
+    }
 }

@@ -142,3 +142,22 @@ showCalendarCheckbox.addEventListener('click', () => {
         initCalendar();
     }
 });
+
+
+
+let calendarStartX = 0;
+// Swipe right/left event listeners to show previous/next months
+document.querySelector('#calendar-container').addEventListener('touchstart', (event) => {
+    startX = event.changedTouches[0].clientX;
+}, false);
+
+document.querySelector('#calendar-container').addEventListener('touchend', (event) => {
+    let endX = event.changedTouches[0].clientX;
+    let deltaX = endX - startX;
+
+    if (deltaX > 100) {
+        showCalendar(-1);
+    } else if (deltaX < -100) {
+        showCalendar(1);
+    }
+}, false);
