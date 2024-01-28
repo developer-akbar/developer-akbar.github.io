@@ -217,7 +217,7 @@ function updateCurrentWaqtContainer() {
     const currentPrayerWaqtElement = document.querySelector('.current-prayer-waqt');
 
     // adding dynamic background image for current prayer
-    currentPrayerWaqtElement.style.backgroundImage = `url('../images/hero_image_${currentWaqtName}.jpg')`;
+    currentPrayerWaqtElement.style.backgroundImage = `url('/salah-timings/images/hero_image_${currentWaqtName.toLowerCase()}.jpg')`;
 
     const currentWaqtNameElement = document.createElement('div');
     currentWaqtNameElement.textContent = currentWaqtName.toLowerCase() !== 'sunrise' ? currentWaqtName : 'Dhuhr';
