@@ -25,7 +25,7 @@ async function getAdhanTimings(date) {
     let userLocationData = JSON.parse(localStorage.getItem('user_location'));
 
     try {
-        displayError(false);
+        displayError(false, '');
 
         if (userLocationData == undefined) {
             userLocationData = await getUserLocation();
@@ -47,7 +47,7 @@ async function getAdhanTimings(date) {
             console.warn('Unable to get user location details');
         }
     } catch (err) {
-        displayError(true);
+        displayError(true, 'Something went wrong, please try again');
         console.error('Unable to get adhan timings ', err);
     } finally {
         displayLoading(false);
@@ -56,37 +56,40 @@ async function getAdhanTimings(date) {
 
 async function getUserLocation() {
     try {
-        displayError(false);
+        displayError(false, '');
 
         console.time('Location Api Response Time');
 
-        position = await requestPoistion();
-        const { latitude, longitude } = position.coords;
-        // const latitude = 14.1232565;
-        // const longitude = 79.2043402;
-        // const latitude = 14.193148;
-        // const longitude = 79.156995;
+        position = await requestPosition();
 
-        const MAP_API = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+        if (position) {
+            const { latitude, longitude } = position.coords;
+            // const latitude = 14.1232565;
+            // const longitude = 79.2043402;
+            // const latitude = 14.193148;
+            // const longitude = 79.156995;
 
-        const response = await fetch(MAP_API);
-        const userLocationData = await response.json();
+            const MAP_API = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
 
-        console.timeEnd('Location Api Response Time');
+            const response = await fetch(MAP_API);
+            const userLocationData = await response.json();
 
-        if (userLocationData.hasOwnProperty('address')) {
-            return userLocationData;
+            console.timeEnd('Location Api Response Time');
+
+            if (userLocationData.hasOwnProperty('address')) {
+                return userLocationData;
+            }
+        } else {
+            displayError('true', 'Error: Location access denied, Please enable location and refresh to server you better.');
         }
     } catch (err) {
-        displayError(true);
+        displayError('true', 'Exception: Location access denied, Please enable location and refresh to server you better.');
         console.warn('Unable to get user location ', err);
     }
 }
 
 async function getPrayerTimes(adhanApi) {
     try {
-        // displayError(false);
-
         console.time('Adhan Api Response Time');
 
         const response = await fetch(adhanApi);
@@ -96,7 +99,6 @@ async function getPrayerTimes(adhanApi) {
 
         return prayerTimesResponse.data;
     } catch (err) {
-        // displayError(true);
         console.error('Unable to get prayer timings ', err);
     }
 }
@@ -133,7 +135,7 @@ function displayPrayerTimes(prayerTimesData) {
 }
 
 // util function to rtriee user location postion
-function requestPoistion() {
+function requestPosition() {
     var options = {
         enableHighAccuracy: true,
         timeout: 5000,
@@ -173,7 +175,7 @@ function addCurrentPrayerTimeClass() {
             : allPrayerTimeElements[0].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking');
 
         if (isCurrentPrayerTimeRunning(currentTimeString, waqtStartTime, waqtEndTime) || isIsha) {
-            if(allPrayerTimeElements[i].querySelector('.prayer-time span:first-child').classList.contains('sunrise')) {
+            if (allPrayerTimeElements[i].querySelector('.prayer-time span:first-child').classList.contains('sunrise')) {
                 allPrayerTimeElements[2].classList.add('current-prayer-time'); // not setting class for Sunrise
             } else {
                 allPrayerTimeElements[i].classList.add('current-prayer-time');
@@ -202,12 +204,12 @@ function updateCurrentWaqtContainer() {
     let nextPrayerIndex = -1;
 
     for (let i = 0; i <= allPrayerTimeElements.length - 1; i++) {
-        
+
         let nextPrayerTime = new Date('2000-01-01 ' + allPrayerTimeElements[i].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking'));
         let currentTime = new Date('2000-01-01 ' + currentTimeString);
-        
+
         // if(currentWaqtName.toLowerCase() === 'isha') nextPrayerTime = new Date(formatDate(nextPrayerTime.setDate(nextPrayerTime.getDate() + 1)));
-        
+
         if (nextPrayerTime > currentTime) {
             nextPrayerIndex = i;
             break;
@@ -237,7 +239,7 @@ function updateCurrentWaqtContainer() {
         // Calculate the remaining time in milliseconds
         var timeDiff = nextPrayerTime - currentTime;
 
-        const nextWaqtCountdownSpanElement = document.createElement('span');        
+        const nextWaqtCountdownSpanElement = document.createElement('span');
 
         // Start a new interval and store its ID
         currentPrayerWaqtElement.interval = setInterval(() => {
@@ -281,11 +283,11 @@ function updateCurrentWaqtContainer() {
 document.addEventListener("visibilitychange", function () {
     if (document.visibilityState === 'visible') {
         // Updating prayer times with correct day when previous day finished
-        if(new Date(document.querySelector('.readable-date').textContent).toDateString() !== new Date().toDateString()) {
+        if (new Date(document.querySelector('.readable-date').textContent).toDateString() !== new Date().toDateString()) {
             getAdhanTimings(formatDate(new Date()));
         }
         // Update the timer and current prayer time when the page becomes visible
-        document.querySelector('.current-prayer-time').classList.remove('current-prayer-time');
+        document.querySelector('.current-prayer-time') && document.querySelector('.current-prayer-time').classList.remove('current-prayer-time');
         addCurrentPrayerTimeClass();
         updateCurrentWaqtContainer();
     }
@@ -346,21 +348,19 @@ async function updateUserLocation() {
     displayLoading(true);
 
     try {
-        // displayError(false);
-
-        // locationDetails.innerHTML = '';
         const userLocationData = await getUserLocation();
+
+        if (!userLocationData) return;
+
         userLocationData['lastUpdatedOn'] = new Date().toLocaleString();
         localStorage.setItem('user_location', JSON.stringify(userLocationData));
 
-        // locationDetails.innerHTML += `<span class="loc-area">${userLocationData.address.neighbourhood}</span><span class="loc-postcode">${userLocationData.address.postcode}</span>`;
-
         getAdhanTimings(formatDate(new Date()));
     } catch (err) {
-        // displayError(true);
         console.error('Unable to get user address ', err);
+    } finally {
+        displayLoading(false);
     }
-    displayLoading(false);
 }
 
 // on click of previous-day button
@@ -404,7 +404,7 @@ function displayLoading(flag) {
     if (flag) {
         const loadElement = document.createElement('div');
         loadElement.classList.add('loading', 'popup');
-        loadElement.textContent = 'Loaidng...';
+        loadElement.textContent = 'Loading...';
         document.querySelector('body').appendChild(loadElement);
         overlay.classList.add('active');
     } else {
@@ -413,11 +413,11 @@ function displayLoading(flag) {
     }
 }
 
-function displayError(flag) {
+function displayError(flag, errorMessage) {
     if (flag) {
         const errorElement = document.createElement('div');
         errorElement.classList.add('error', 'popup');
-        errorElement.textContent = 'Something went wrong, please try again';
+        errorElement.textContent = errorMessage;
         document.querySelector('body').appendChild(errorElement);
         // overlay.classList.add('active');
     } else {
