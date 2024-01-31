@@ -60,7 +60,7 @@ async function getUserLocation() {
 
         console.time('Location Api Response Time');
 
-        position = await requestPosition();
+         const position = await requestPosition();
 
         if (position) {
             const { latitude, longitude } = position.coords;
@@ -220,6 +220,7 @@ function updateCurrentWaqtContainer() {
 
     // adding dynamic background image for current prayer
     currentPrayerWaqtElement.style.backgroundImage = `url('/salah-timings/images/hero_image_${currentWaqtName.toLowerCase()}.jpg')`;
+    // currentPrayerWaqtElement.style.backgroundImage = `url('../images/hero_image_${currentWaqtName.toLowerCase()}.jpg')`;
 
     const currentWaqtNameElement = document.createElement('div');
     currentWaqtNameElement.textContent = currentWaqtName.toLowerCase() !== 'sunrise' ? currentWaqtName : 'Dhuhr';
@@ -340,7 +341,8 @@ function closeModal(modal) {
 }
 
 document.querySelector('.current-location').addEventListener('click', () => {
-    updateUserLocation();
+    updateUserLocation(); // update to current location
+    getWeather(); // update to current weather
 });
 
 async function updateUserLocation() {
@@ -427,8 +429,8 @@ function displayError(flag, errorMessage) {
 }
 
 function getLocalArea(address) {
-    if (address.hasOwnProperty('neighbourhood') && address.neighbourhood) return address.neighbourhood;
-    // else if (address.hasOwnProperty('village') && address.village) return address.village;
-    else if (address.hasOwnProperty('county') && address.county) return address.county;
+    if (address.hasOwnProperty('county') && address.county) return address.county;
+    else if (address.hasOwnProperty('neighbourhood') && address.neighbourhood) return address.neighbourhood;
+    else if (address.hasOwnProperty('village') && address.village) return address.village;
     else if (address.hasOwnProperty('road') && address.road) return address.road;
 }

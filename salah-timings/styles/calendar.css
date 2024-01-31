@@ -28,6 +28,10 @@ button:hover {
     background-color: #383a45;
 }
 
+button:active {
+    background-color: #122b61;
+}
+
 .current-day-btn {
     cursor: pointer;
     padding: 5px;

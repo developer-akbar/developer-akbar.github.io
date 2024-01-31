@@ -15,6 +15,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="images/mosque_logo.png">
     <script src="scripts/adhantimings.js" defer></script>
     <script src="scripts/calendar.js" defer></script>
+    <script src="scripts/weather.js" defer></script>
     <title>Prayer Timings</title>
 </head>
 
@@ -39,7 +40,19 @@
 
     <main>
         <p class="method-name"></p>
-        <div class="current-prayer-waqt">
+        <div class="current-prayer-waqt-wrapper">
+            <div class="current-prayer-waqt"></div>
+            <div class="current-weather-wrapper">
+                <img src="" alt="" class="weather-icon">
+                <div class="temp-details">
+                    <span class="current-temp"></span>&deg;
+                </div>
+            </div>
+            <ul class="weather-loading">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
         </div>
 
         <!-- <h2 align="center">Adhan Timings</h2> -->
