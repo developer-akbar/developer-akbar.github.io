@@ -137,9 +137,9 @@ function displayPrayerTimes(prayerTimesData) {
 // util function to rtriee user location postion
 function requestPosition() {
     var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 1000
     }
 
     return new Promise(function (resolve, reject) {
@@ -176,8 +176,10 @@ function addCurrentPrayerTimeClass() {
 
         if (isCurrentPrayerTimeRunning(currentTimeString, waqtStartTime, waqtEndTime) || isIsha) {
             if (allPrayerTimeElements[i].querySelector('.prayer-time span:first-child').classList.contains('sunrise')) {
+                allPrayerTimeElements[1].classList.add('not-a-prayer');
                 allPrayerTimeElements[2].classList.add('current-prayer-time'); // not setting class for Sunrise
             } else {
+                allPrayerTimeElements[1].classList.contains('not-a-prayer') && allPrayerTimeElements[1].classList.remove('not-a-prayer');
                 allPrayerTimeElements[i].classList.add('current-prayer-time');
             }
             break;
@@ -208,8 +210,6 @@ function updateCurrentWaqtContainer() {
         let nextPrayerTime = new Date('2000-01-01 ' + allPrayerTimeElements[i].querySelector('.prayer-time span:last-child').getAttribute('data-waqt-tracking'));
         let currentTime = new Date('2000-01-01 ' + currentTimeString);
 
-        // if(currentWaqtName.toLowerCase() === 'isha') nextPrayerTime = new Date(formatDate(nextPrayerTime.setDate(nextPrayerTime.getDate() + 1)));
-
         if (nextPrayerTime > currentTime) {
             nextPrayerIndex = i;
             break;
@@ -225,7 +225,9 @@ function updateCurrentWaqtContainer() {
     const currentWaqtNameElement = document.createElement('div');
     currentWaqtNameElement.textContent = currentWaqtName.toLowerCase() !== 'sunrise' ? currentWaqtName : 'Dhuhr';
     currentWaqtNameElement.classList.add('current-waqt');
-    currentWaqtNameElement.setAttribute('data-when', currentWaqtName.toLowerCase() !== 'sunrise' ? 'Now' : 'Next');
+
+    // adding Now/Next prayer indicator when Sunrise or Not A Prayer time occurs
+    currentWaqtNameElement.setAttribute('data-when', document.querySelector('.prayer-times .prayer-time.not-a-prayer') ? 'Next' : 'Now');
 
     currentPrayerWaqtElement.innerHTML = ''; // Clear existing content
     currentPrayerWaqtElement.appendChild(currentWaqtNameElement);
@@ -272,6 +274,7 @@ function updateCurrentWaqtContainer() {
                 clearInterval(currentPrayerWaqtElement.interval); // Clear the interval when the countdown reaches zero
                 nextWaqtCountdownSpanElement.remove();
                 document.querySelector('.current-waqt').remove();
+                
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
             }
@@ -433,4 +436,6 @@ function getLocalArea(address) {
     else if (address.hasOwnProperty('neighbourhood') && address.neighbourhood) return address.neighbourhood;
     else if (address.hasOwnProperty('village') && address.village) return address.village;
     else if (address.hasOwnProperty('road') && address.road) return address.road;
+    else if (address.hasOwnProperty('suburban') && address.road) return address.suburban;
+    else if (address.hasOwnProperty('town') && address.road) return address.town;
 }
