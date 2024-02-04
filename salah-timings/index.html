@@ -75,7 +75,10 @@
         <div id="calendar-container"></div>
 
         <div id="user-location-modal" class="user-location-modal popup">
-            <input type="text" name="" id="" class="custom-user-location" placeholder="Search location">
+            <div class="search-wrapper">
+                <input type="text" name="" id="" class="location-search-input" placeholder="Search address or pincode ">
+                <div class="suggestions-container"></div>
+            </div>            
             <div class="current-location"><i class="fa-solid fa-location-crosshairs"></i>Current location</div>
         </div>
 
@@ -85,7 +88,6 @@
     <footer class="footer">
         <div class="copyright">
             <p>A project by <span class="author-name">Akbar</span></p>
-            <div id="landscape-message">For better experience view on smaller screens</div>
         </div>
     </footer>
 </body>

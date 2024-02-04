@@ -1,51 +1,57 @@
 const REQUIRED_WAQT_NAMES = ["fajr", "sunrise", "dhuhr", "asr", "maghrib", "isha"];
-const ADHAN_API = 'https://api.aladhan.com/v1/calendarByAddress/';
-
-var isMutationUpdated = false;
+const ADHAN_API = 'https://api.aladhan.com/v1/timingsByAddress';
+const POSTAL_API = 'https://api.postalpincode.in';
+const LOCATION_FINDER_API = 'https://nominatim.openstreetmap.org/reverse';
 
 const locationDetails = document.querySelector('.location-details');
 const adhanTimings = document.querySelector('.adhan-timings');
 const prayerTimes = document.querySelector('.prayer-times');
 const overlay = document.getElementById('overlay');
+const searchInputField = document.querySelector('.location-search-input');
+const suggestionsContainer = document.querySelector('.suggestions-container');
+
+var isMutationUpdated = false;
 
 adhanTimings.style.height = `${document.querySelector('body').clientHeight - document.querySelector('footer').clientHeight - adhanTimings.offsetTop}px`;
 
-getAdhanTimings(formatDate(new Date())); // on page load for current date
+getAdhanTimings(formatDate(new Date()));
 
-async function getAdhanTimings(date) {
+async function getAdhanTimings(date, adhanApi) {
     displayLoading(true);
 
     if (isMutationUpdated) {
         observer.disconnect(); // disconnect observing once handled
     }
 
-    locationDetails.innerHTML = '';
-
-    // retrieving user location from local storage if available, else fetching from API
-    let userLocationData = JSON.parse(localStorage.getItem('user_location'));
-
     try {
         displayError(false, '');
 
+        let userAddress;
+
+        // fetching user location information from local storage if available
+        let userLocationData = JSON.parse(localStorage.getItem('user_location'));
+
+        // if not available on local storage, then fetch user Geo location
         if (userLocationData == undefined) {
             userLocationData = await getUserLocation();
         }
 
-        if (userLocationData !== undefined) {
+        // if adhanApi is not defined in the calling function and the user location data is found
+        if (adhanApi === undefined && userLocationData !== undefined) {
+            // stroing user location to local storage
             localStorage.getItem('user_location') == undefined && localStorage.setItem('user_location', JSON.stringify(userLocationData));
 
-            locationDetails.innerHTML += `<span class="loc-area">${getLocalArea(userLocationData.address)}</span><span class="loc-postcode">${userLocationData.address.postcode}</span>`;
-            let userAddress = userLocationData.display_name;
-            userAddress = userAddress.replace(/[^a-zA-Z0-9-_]/g, ' ');
-            let adhanApi = `https://api.aladhan.com/v1/timingsByAddress/${date}?address=${encodeURIComponent(userAddress)}`;
+            updateLocationDetails(userLocationData.area, userLocationData.postcode);
 
-            console.log('Adhan API: ', adhanApi);
-
-            const prayerTimesData = await getPrayerTimes(adhanApi);
-            displayPrayerTimes(prayerTimesData);
-        } else {
-            console.warn('Unable to get user location details');
+            userAddress = typeof userLocationData.address != 'object' && userLocationData.address.replace(/[^a-zA-Z0-9-_]/g, ' ');
         }
+
+        // constructing adhanApi if calling function not passing directly
+        adhanApi = (adhanApi == undefined) ? `${ADHAN_API}/${date}?address=${encodeURIComponent(userAddress)}` : adhanApi;
+        console.log('Adhan API: ', adhanApi);
+
+        const prayerTimesData = await getPrayerTimes(adhanApi);
+        displayPrayerTimes(prayerTimesData);
     } catch (err) {
         displayError(true, 'Something went wrong, please try again');
         console.error('Unable to get adhan timings ', err);
@@ -54,30 +60,28 @@ async function getAdhanTimings(date) {
     }
 }
 
+// this function helps to fetch user's Geo Location
 async function getUserLocation() {
     try {
         displayError(false, '');
 
-        console.time('Location Api Response Time');
-
-         const position = await requestPosition();
+        const position = await requestPosition();
 
         if (position) {
             const { latitude, longitude } = position.coords;
-            // const latitude = 14.1232565;
-            // const longitude = 79.2043402;
-            // const latitude = 14.193148;
-            // const longitude = 79.156995;
 
-            const MAP_API = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-
-            const response = await fetch(MAP_API);
+            const response = await fetch(`${LOCATION_FINDER_API}?format=json&lat=${latitude}&lon=${longitude}`);
             const userLocationData = await response.json();
 
-            console.timeEnd('Location Api Response Time');
-
             if (userLocationData.hasOwnProperty('address')) {
-                return userLocationData;
+                return {
+                    area: getLocalArea(userLocationData.address),
+                    postcode: userLocationData.address.postcode,
+                    address: userLocationData.display_name,
+                    latitude: userLocationData.lat,
+                    longitude: userLocationData.lon,
+                    lastUpdatedOn: new Date().toLocaleString()
+                };
             }
         } else {
             displayError('true', 'Error: Location access denied, Please enable location and refresh to server you better.');
@@ -88,14 +92,26 @@ async function getUserLocation() {
     }
 }
 
+// util function to rtriee user location postion
+function requestPosition() {
+    var options = {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 1000
+    }
+
+    return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(
+            pos => { resolve(pos); },
+            err => { reject(err); },
+            options);
+    });
+}
+
 async function getPrayerTimes(adhanApi) {
     try {
-        console.time('Adhan Api Response Time');
-
         const response = await fetch(adhanApi);
         const prayerTimesResponse = await response.json();
-
-        console.timeEnd('Adhan Api Response Time');
 
         return prayerTimesResponse.data;
     } catch (err) {
@@ -134,22 +150,6 @@ function displayPrayerTimes(prayerTimesData) {
     }
 }
 
-// util function to rtriee user location postion
-function requestPosition() {
-    var options = {
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 1000
-    }
-
-    return new Promise(function (resolve, reject) {
-        navigator.geolocation.getCurrentPosition(
-            pos => { resolve(pos); },
-            err => { reject(err); },
-            options);
-    });
-}
-
 // util function to fomrmat time
 function withTimeFormat(time) {
     time = time.toString().match(/^([01]\d|2[0-3]) (:) ([0-5]\d)(:[0-5]\d)?$/) || [time]
@@ -163,6 +163,7 @@ function withTimeFormat(time) {
     return time.join('');
 }
 
+// this function helps to find on going prayer time and adds 'current-prayer-time' class
 function addCurrentPrayerTimeClass() {
     const allPrayerTimeElements = document.querySelectorAll('.prayer-time');
     let currentDate = new Date();
@@ -274,7 +275,7 @@ function updateCurrentWaqtContainer() {
                 clearInterval(currentPrayerWaqtElement.interval); // Clear the interval when the countdown reaches zero
                 nextWaqtCountdownSpanElement.remove();
                 document.querySelector('.current-waqt').remove();
-                
+
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
             }
@@ -322,6 +323,8 @@ observer.observe(prayerTimes, observerConfig);
 
 document.querySelector('.user-location').addEventListener('click', (event) => {
     const userLocatoinModalTarget = document.querySelector(event.target.closest('.user-location').dataset.modalTarget);
+    document.querySelector('.location-search-input').value = '';
+    document.querySelector('.location-search-input').focus();
     openModal(userLocatoinModalTarget);
 });
 
@@ -438,4 +441,171 @@ function getLocalArea(address) {
     else if (address.hasOwnProperty('road') && address.road) return address.road;
     else if (address.hasOwnProperty('suburban') && address.road) return address.suburban;
     else if (address.hasOwnProperty('town') && address.road) return address.town;
+}
+
+// debounce helps to prevent unnecessary calls to api until specified timeout
+let timeoutId;
+const debounce = (callback) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+        callback();
+    }, 500);
+}
+
+searchInputField.addEventListener('input', (event) => {
+    debounce(async () => {
+        let searchInput = event.target.value;
+
+        if (searchInput.length < 3) {
+            // Clear suggestions and hide the container if input length is below desired length
+            clearSuggestions();
+            return;
+        }
+
+        let searchSuggestionsData;
+        let apiIdentifier = 'postoffice';
+
+        // if search input starts with a digit, meaning it's a pincode search
+        if ((/^[0-9]*$/).test(searchInput.charAt(0)) && searchInput.length == 6) {
+            event.target.setAttribute('maxlength', '6');
+            apiIdentifier = 'pincode';
+            searchSuggestionsData = await locationSearchSuggestions(searchInput, apiIdentifier);
+        }
+        // if search input doesnt start with a digit, meaning it's a postoffice search
+        else if (!(/^[0-9]*$/).test(searchInput.charAt(0))) {
+            event.target.removeAttribute('maxlength');
+            console.log('Searching...', searchInput);
+            searchSuggestionsData = await locationSearchSuggestions(searchInput, apiIdentifier);
+        }
+        searchSuggestionsData && updateUI(searchSuggestionsData);
+    });
+});
+
+// this function helps to fetch search suggestion results from POSTAL API
+async function locationSearchSuggestions(searchInput, apiIdentifier) {
+    try {
+        const response = await fetch(`${POSTAL_API}/${apiIdentifier}/${searchInput}`);
+        const data = await response.json();
+
+        let suggestionResults = data[0].PostOffice;
+
+        if (!suggestionResults) return [];
+
+        if (apiIdentifier === 'postoffice') {
+            suggestionResults = suggestionResults.filter(suggestionResult =>
+                suggestionResult.Name.toLowerCase().startsWith(searchInput.toLowerCase())
+            );
+        }
+
+        return suggestionResults;
+
+    } catch (err) {
+        console.error('Error in getting search suggestions', err);
+        return [];
+    }
+}
+
+/* this function helps to add the search suggestions data as list items 
+ to suggestion container so that user can select */
+function updateUI(searchSuggestionsData) {
+
+    // clear previous suggestions
+    suggestionsContainer.innerHTML = '';
+
+    // check if there are any suggestions
+    if (searchSuggestionsData.length === 0) {
+        suggestionsContainer.style.display = 'block';
+        suggestionsContainer.innerHTML = '<p>No address found</p>';
+        return;
+    }
+
+    // create a list to hold the suggestions
+    const suggestionsList = document.createElement('ul');
+
+    // iterate through the suggestions and create list items
+    searchSuggestionsData.forEach((suggestion) => {
+        const listItem = document.createElement('li');
+
+        // list item content
+        listItem.textContent = `${suggestion.Name}, ${suggestion.District}, ${suggestion.State}, ${suggestion.Pincode}`;
+
+        // add click event listener to handle selection
+        listItem.addEventListener('click', () => {
+            suggestionsContainer.innerHTML = ''; // Clear suggestions after selection
+
+            /* appending 'a' if any postoffice name ending with 'pet'. 
+               for example Pullampet should be Pullampeta to get right prayer timing results as per Al-Adhan API */
+            if (suggestion.Name.toLowerCase().endsWith('pet')) {
+                suggestion.Name += 'a';
+            }
+
+            let userAddress = `${suggestion.Name}, ${suggestion.District}, ${suggestion.State}, ${suggestion.Pincode}`;
+
+            let adhanApi = `${ADHAN_API}/${formatDate(new Date())}?address=${encodeURIComponent(userAddress)}`;
+            closeModal(document.querySelector('.user-location-modal.active'));
+
+            updateLocationDetails(suggestion.Name, suggestion.Pincode);
+
+            let userLocationData = {
+                area: suggestion.Name,
+                postcode: suggestion.Pincode,
+                address: `${suggestion.Name}, ${suggestion.District}, ${suggestion.State}, ${suggestion.Pincode}`
+            }
+
+            userLocationData['lastUpdatedOn'] = new Date().toLocaleString();
+            localStorage.setItem('user_location', JSON.stringify(userLocationData));
+
+            getAdhanTimings(formatDate(new Date()), adhanApi);
+        });
+
+        suggestionsList.appendChild(listItem);
+    });
+
+    // append the suggestions list to the container
+    suggestionsContainer.appendChild(suggestionsList);
+
+    // show the suggestions container
+    suggestionsContainer.style.display = 'block';
+}
+
+function clearSuggestions() {
+    suggestionsContainer.innerHTML = '';
+    suggestionsContainer.style.display = 'none';
+}
+
+// add a click event listener to clear suggestions and hide the container if user clicks outside of it
+document.addEventListener('click', (event) => {
+    if (!event.target.matches('.location-search-input')) {
+        clearSuggestions();
+    }
+});
+
+// add a click event listener to close the suggestions container if user clicks outside of it
+document.addEventListener('click', (event) => {
+    const suggestionsContainer = document.querySelector('.suggestions-container');
+    if (!event.target.closest('.suggestions-container') && !event.target.matches('.location-search-input')) {
+        suggestionsContainer.style.display = 'none';
+    }
+});
+
+
+// this function helps to add locaation area and pincode upon location updation
+function updateLocationDetails(locationArea, locationPostCode) {
+    locationDetails.innerHTML = '';
+
+    // create location area element
+    const locationAreaSpanElement = document.createElement('span');
+    locationAreaSpanElement.innerHTML = locationArea;
+    locationAreaSpanElement.classList.add('loc-area');
+
+    // create location postcode element
+    const locationPostCodeSpanElement = document.createElement('span');
+    locationPostCodeSpanElement.textContent = locationPostCode;
+    locationPostCodeSpanElement.classList.add('loc-postcode');
+
+    // refresh/update icon
+    locationPostCodeSpanElement.innerHTML += `<i class="fa-solid fa-rotate-right update-icon"></i>`;
+
+    locationDetails.appendChild(locationAreaSpanElement);
+    locationDetails.appendChild(locationPostCodeSpanElement);
 }
