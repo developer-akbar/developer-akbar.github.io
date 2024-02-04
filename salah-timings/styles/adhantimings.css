@@ -135,6 +135,11 @@ input.location-search-input {
     background-color: #1c87df9f;
 }
 
+.waiting-text {
+    font-size: 0.75rem;
+    color: gray;
+}
+
 .update-icon {
     margin-left: 8px;
     font-size: 12px;

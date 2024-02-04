@@ -57,6 +57,12 @@ async function getAdhanTimings(date, adhanApi) {
         console.error('Unable to get adhan timings ', err);
     } finally {
         displayLoading(false);
+
+        // making sure that the prayer times screen shown when adhan API is triggered
+        document.querySelector('[name="show-calendar"]').classList.remove('active');
+        document.querySelector('.show-calendar.fa-calendar-days').classList.remove('active');
+        document.getElementById('calendar-container').classList.remove('active');
+        adhanTimings.classList.add('active');
     }
 }
 
@@ -484,6 +490,9 @@ searchInputField.addEventListener('input', (event) => {
 // this function helps to fetch search suggestion results from POSTAL API
 async function locationSearchSuggestions(searchInput, apiIdentifier) {
     try {
+        suggestionsContainer.style.display = 'block';
+        suggestionsContainer.innerHTML = `<span class="waiting-text">Please wait...</span>`;
+
         const response = await fetch(`${POSTAL_API}/${apiIdentifier}/${searchInput}`);
         const data = await response.json();
 
@@ -502,6 +511,8 @@ async function locationSearchSuggestions(searchInput, apiIdentifier) {
     } catch (err) {
         console.error('Error in getting search suggestions', err);
         return [];
+    } finally {
+        suggestionsContainer.innerHTML = '';
     }
 }
 
