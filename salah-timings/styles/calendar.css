@@ -19,7 +19,7 @@ button {
     cursor: pointer;
     border-radius: 8px;
     border: 2px solid;
-    background-color: #383a45de;
+    background-color: transparent;
     color: white;
     font-weight: bold;
 }
@@ -76,6 +76,7 @@ th:hover {
 td {
     cursor: pointer;
     transition: background-color 300ms, color 300ms;
+    position: relative;
 }
 
 td:hover:not(.current-day) {
@@ -125,6 +126,22 @@ td:hover:not(.current-day) {
     display: flex;
     flex-direction: column;
     margin: 1rem 2rem;
+}
+
+.islamic-date {
+    font-size: 10px;
+}
+
+.islamic-month-first-day::before {
+    content: '\f186';
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0px 5px;
+    text-shadow: 2px 2px 8px #a1ff00;
+    color: red;
+    font-size: 1.2rem;
 }
 
 @media (min-width : 420px) {

@@ -191,11 +191,11 @@ input.location-search-input {
 
 .current-weather-wrapper {
     position: absolute;
-    inset: auto 3rem 0 auto;
+    inset: auto 1rem 0 auto;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1.375rem;
+    font-size: 1.5rem;
     font-weight: bold;
     padding: 5px;
     text-shadow: 1px 1px 10px black;

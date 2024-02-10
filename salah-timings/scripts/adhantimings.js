@@ -28,13 +28,8 @@ async function getAdhanTimings(date, adhanApi) {
 
         let userAddress;
 
-        // fetching user location information from local storage if available
-        let userLocationData = JSON.parse(localStorage.getItem('user_location'));
-
-        // if not available on local storage, then fetch user Geo location
-        if (userLocationData == undefined) {
-            userLocationData = await getUserLocation();
-        }
+        // fetch user location information from local storage or get user Geo location
+        let userLocationData = JSON.parse(localStorage.getItem('user_location')) || await getUserLocation();
 
         // if adhanApi is not defined in the calling function and the user location data is found
         if (adhanApi === undefined && userLocationData !== undefined) {

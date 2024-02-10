@@ -2,6 +2,7 @@ var dateCellClicked = false;
 let currentMonthIndex = 0;
 let currentYear;
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const islamicMonthNames = ['Muḥarram', 'Ṣafar', 'Rabīʿ al-Awwal', 'Rabīʿ al-Thānī', 'Jumādā al-Awwal', 'Jumādā al-Thānī', 'Rajab', 'Shaʿbān', 'Ramaḍān', 'Shawwāl', 'Dhū al-Qaʿdah', 'Dhū al-Ḥijjah'];
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 const calendarContainer = document.getElementById('calendar-container');
@@ -11,7 +12,6 @@ function initCalendar() {
 
     // get current date
     const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
     currentYear = currentYear || currentDate.getFullYear();
 
     const monthName = monthNames[currentDate.getMonth()];
@@ -51,6 +51,7 @@ function initCalendar() {
     const table = document.createElement('table');
 
     const headerRow = document.createElement('tr');
+    headerRow.classList.add('week-names');
     daysOfWeek.forEach(day => {
         const th = document.createElement('th');
         th.classList.add('week-day');
@@ -77,8 +78,15 @@ function initCalendar() {
             if (dayCount > 0 && dayCount <= daysInMonth) {
                 cell.classList.add('month-day');
                 cell.setAttribute('data-date-tracking', `${dayCount}-${currentMonthIndex + 1}-${currentYear}`);
-                cell.textContent = dayCount;
+                // cell.innerHTML = dayCount;
 
+                const islamicCalendar = convertToIslamicDate(dayCount, currentMonthIndex+1, currentYear);
+                cell.innerHTML = `${dayCount} <br> <span class="islamic-date" title="${islamicCalendar.day} - ${islamicCalendar.islamicMonthName}">${islamicCalendar.day}-${islamicCalendar.month}</span>`;
+
+                // adding class if islamic calendar date is first
+                if(islamicCalendar.day == 1) {
+                    cell.classList.add('islamic-month-first-day');
+                }
                 const dayCellDate = new Date(currentYear, currentMonthIndex, dayCount);
                 if (isCurrentDay(currentDate, dayCellDate)) {
                     cell.classList.add('current-day');
@@ -95,17 +103,21 @@ function initCalendar() {
                 });
                 dayCount++;
             }
+            row.classList.add(`week-${i + 1}`);
+            (/week-/).test(row.className) && row.appendChild(cell);
 
-            if (dayCount - 1 > daysInMonth) {
+            if (dayCount > daysInMonth) {
                 break; // stop creating rows if all days have displayed
             }
-            row.appendChild(cell);
         }
-        table.appendChild(row);
+
+        // adding table row only if there is at least a day available in week row
+        (row.firstChild.classList.contains('month-day') || row.lastChild.classList.contains('month-day')) 
+            && table.appendChild(row);
     }
 
     calendarContainer.appendChild(table);
-    // calendarContainer.style.height = `${document.querySelector('body').clientHeight - document.querySelector('footer').clientHeight - calendarContainer.offsetTop - 16}px`;
+    calendarContainer.style.height = `${document.querySelector('body').clientHeight - document.querySelector('footer').clientHeight - calendarContainer.offsetTop - 16}px`;
 }
 
 function showCalendar(monthOffset) {
@@ -139,7 +151,7 @@ showCalendarCheckbox.addEventListener('click', () => {
     adhanTimings.classList.toggle('active');
 
     if (showCalendarCheckbox.checked) {
-        initCalendar();
+        showCurrentDay(); // showing current day and month calendar
     }
 });
 
@@ -147,11 +159,11 @@ showCalendarCheckbox.addEventListener('click', () => {
 
 let calendarStartX = 0;
 // Swipe right/left event listeners to show previous/next months
-document.querySelector('#calendar-container').addEventListener('touchstart', (event) => {
+calendarContainer.addEventListener('touchstart', (event) => {
     startX = event.changedTouches[0].clientX;
 }, false);
 
-document.querySelector('#calendar-container').addEventListener('touchend', (event) => {
+calendarContainer.addEventListener('touchend', (event) => {
     let endX = event.changedTouches[0].clientX;
     let deltaX = endX - startX;
 
@@ -161,3 +173,50 @@ document.querySelector('#calendar-container').addEventListener('touchend', (even
         showCalendar(1);
     }
 }, false);
+
+
+// hleper function
+function intPart(floatNum) {
+    if (floatNum < -0.0000001) {
+        return Math.ceil(floatNum - 0.0000001)
+    }
+    return Math.floor(floatNum + 0.0000001)
+}
+
+// this function helps to convert georgian date into islamic date
+function convertToIslamicDate(day, month, year) {
+    d = parseInt(day)
+    m = parseInt(month)
+    y = parseInt(year)
+
+    delta = 0
+    if ((y > 1582) || ((y == 1582) && (m > 10)) || ((y == 1582) && (m == 10) && (d > 14))) {
+        //added +delta=1 on jd to comply isna rulling 2007
+        jd = intPart((1461 * (y + 4800 + intPart((m - 14) / 12))) / 4) + intPart((367 * (m - 2 - 12 * (intPart((m - 14) / 12)))) / 12) -
+            intPart((3 * (intPart((y + 4900 + intPart((m - 14) / 12)) / 100))) / 4) + d - 32075 + delta
+    }
+    else {
+        //added +1 on jd to comply isna rulling
+        jd = 367 * y - intPart((7 * (y + 5001 + intPart((m - 9) / 7))) / 4) + intPart((275 * m) / 9) + d + 1729777 + delta
+    }
+    //arg.JD.value=jd
+    //added -1 on jd1 to comply isna rulling
+    jd1 = jd - delta
+    //arg.wd.value=weekDay(jd1%7)
+    l = jd - 1948440 + 10632
+    n = intPart((l - 1) / 10631)
+    l = l - 10631 * n + 354
+    j = (intPart((10985 - l) / 5316)) * (intPart((50 * l) / 17719)) + (intPart(l / 5670)) * (intPart((43 * l) / 15238))
+    l = l - (intPart((30 - j) / 15)) * (intPart((17719 * j) / 50)) - (intPart(j / 16)) * (intPart((15238 * j) / 43)) + 29
+    m = intPart((24 * l) / 709)
+    d = l - intPart((709 * m) / 24)
+    y = 30 * n + j - 30
+
+    // d + "-" + islamicMonthNames[m];
+    let res = {
+        day: d,
+        month: m,
+        islamicMonthName: islamicMonthNames[m -1]
+    };
+    return res;
+}
