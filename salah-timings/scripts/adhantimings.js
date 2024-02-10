@@ -197,6 +197,8 @@ function addCurrentPrayerTimeClass() {
     }
 }
 
+updateCurrentWaqtContainer();
+
 function updateCurrentWaqtContainer() {
     const currentPrayerTime = document.querySelector('.prayer-times .prayer-time.current-prayer-time');
     const currentWaqtName = currentPrayerTime != undefined ? currentPrayerTime.firstChild.textContent : '';
@@ -279,6 +281,8 @@ function updateCurrentWaqtContainer() {
 
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
+
+                showNotification(currentWaqtName);
             }
         }
     }
@@ -614,4 +618,16 @@ function updateLocationDetails(locationArea, locationPostCode) {
 
     locationDetails.appendChild(locationAreaSpanElement);
     locationDetails.appendChild(locationPostCodeSpanElement);
+}
+
+// this function helps to show notification when prayer time is arrived
+function showNotification(prayerName) {
+    Notification.requestPermission().then(permission => {
+        if (Notification.permission === 'granted') {
+            const notification = new Notification(`Prayer Time - ${prayerName}`, {
+                body: `It's time for ${prayerName}`,
+                icon: 'images/mosque_logo.png' // Add an icon if desired
+            });
+        }
+    });
 }
