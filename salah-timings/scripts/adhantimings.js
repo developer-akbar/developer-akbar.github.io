@@ -153,7 +153,7 @@ function displayPrayerTimes(prayerTimesData) {
 
 // util function to fomrmat time
 function withTimeFormat(time) {
-    time = time.toString().match(/^([01]\d|2[0-3]) (:) ([0-5]\d)(:[0-5]\d)?$/) || [time]
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
 
     if (time.length > 1) {
         time = time.slice(1);
@@ -202,6 +202,7 @@ updateCurrentWaqtContainer();
 function updateCurrentWaqtContainer() {
     const currentPrayerTime = document.querySelector('.prayer-times .prayer-time.current-prayer-time');
     const currentWaqtName = currentPrayerTime != undefined ? currentPrayerTime.firstChild.textContent : '';
+    const nextWaqtName = currentPrayerTime != undefined ? currentPrayerTime.nextSibling.firstChild.textContent : '';
 
     const allPrayerTimeElements = document.querySelectorAll('.prayer-time');
     let currentDate = new Date();
@@ -282,7 +283,7 @@ function updateCurrentWaqtContainer() {
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
 
-                showNotification(currentWaqtName);
+                showNotification(nextWaqtName);
             }
         }
     }
@@ -620,14 +621,33 @@ function updateLocationDetails(locationArea, locationPostCode) {
     locationDetails.appendChild(locationPostCodeSpanElement);
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    requestNotificationPermission();
+});
+
+function requestNotificationPermission() {
+    // Check if the browser supports the Notification API
+    if ('Notification' in window) {
+        Notification.requestPermission().then((permission) => {
+            if (permission === 'granted') {
+                console.log('Notification permission granted');
+            } else if (permission === 'denied') {
+                console.warn('Notification permission denied');
+            } else if (permission === 'default') {
+                console.warn('Notification permission prompt closed without a choice');
+            }
+        });
+    } else {
+        console.warn('Notification API not supported in this browser');
+    }
+}
+
 // this function helps to show notification when prayer time is arrived
 function showNotification(prayerName) {
-    Notification.requestPermission().then(permission => {
-        if (Notification.permission === 'granted') {
-            const notification = new Notification(`Prayer Time - ${prayerName}`, {
-                body: `It's time for ${prayerName}`,
-                icon: 'images/mosque_logo.png' // Add an icon if desired
-            });
-        }
-    });
+    if (Notification.permission === 'granted') {
+        const notification = new Notification(`Prayer Time - ${prayerName}`, {
+            body: `It's time for ${prayerName}`,
+            icon: 'images/mosque_logo.png' // Add an icon if desired
+        });
+    }
 }
