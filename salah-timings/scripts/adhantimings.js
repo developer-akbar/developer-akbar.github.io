@@ -202,7 +202,6 @@ updateCurrentWaqtContainer();
 function updateCurrentWaqtContainer() {
     const currentPrayerTime = document.querySelector('.prayer-times .prayer-time.current-prayer-time');
     const currentWaqtName = currentPrayerTime != undefined ? currentPrayerTime.firstChild.textContent : '';
-    const nextWaqtName = currentPrayerTime != undefined ? currentPrayerTime.nextSibling.firstChild.textContent : '';
 
     const allPrayerTimeElements = document.querySelectorAll('.prayer-time');
     let currentDate = new Date();
@@ -283,6 +282,11 @@ function updateCurrentWaqtContainer() {
                 addCurrentPrayerTimeClass();
                 updateCurrentWaqtContainer();
 
+                const nextWaqtName = currentPrayerTime != undefined 
+                                        ? currentPrayerTime.nextSibling != undefined 
+                                            ? currentPrayerTime.nextSibling.firstChild.textContent 
+                                            : currentPrayerTime.parentElement.firstChild // if reaches end of current element, get the first prayer time name
+                                        : '';
                 showNotification(nextWaqtName);
             }
         }
