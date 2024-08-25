@@ -1,0 +1,153 @@
+#transaction-form {
+    padding: 0.75em;
+    min-height: 50%;
+    overflow: auto;
+}
+
+#transaction-modal.modal {
+    /* background-color: white; */
+    padding-top: 0;
+    transform: translate(0, 0);
+}
+
+#transaction-modal .transaction-modal-content {
+    background-color: white;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: unset;
+    max-width: 500px;
+    height: 100dvh;
+    max-height: fit-content;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 36px;
+    margin-bottom: 0.5em;
+}
+
+.form-row:has(#description) {
+    height: 80px;
+}
+
+.form-row label {
+    flex-basis: 15ch;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea,
+.form-row button {
+    flex: 1;
+}
+
+#transaction-form>.form-row:last-child {
+    margin-top: .75rem;
+}
+
+.cancel-btn {
+    background-color: #888;
+}
+
+.cancel-btn:hover {
+    background-color: #888888c2;
+}
+
+.custom-dropdown {
+    position: relative;
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+#type-container {
+    border-bottom: unset !important;
+}
+
+.type-options {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.type-option {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.type-option.active {
+    border-color: currentColor;
+    font-weight: bold;
+}
+
+.type-option:not(.active) {
+    color: #000 !important;
+}
+
+.dropdown-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.grid.hidden {
+    display: none;
+}
+
+.grid.active {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    max-height: calc(100% - 56px);
+    overflow: auto;
+    left: 0;
+    right: 0;
+    /* border-top: 1px solid #ccc; */
+    background: white;
+}
+
+.grid-header {
+    grid-column: 1 / -1;
+    padding: 0.75em;
+    background-color: #000;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.grid span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border: 0.5px solid #ccc;
+    text-align: center;
+    height: 50px;
+    cursor: pointer;
+}
+
+.note-input {
+    flex: 1;
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    #transaction-modal .transaction-modal-content {
+        height: calc(100dvh - 56px);
+    }
+}

@@ -1,0 +1,190 @@
+.categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 10px;
+    border-radius: 8px;
+}
+
+.category {
+    flex: 1 1 30%;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.category .amount, .subcategory .amount {
+    margin-left: auto;
+}
+
+.percentage {
+    background-color: var(--random-bg-color);
+    padding-inline: 5px;
+    border-radius: 5px;
+    min-width: 7.5ch;
+    text-align: center;
+}
+
+.subcategory-list {
+    margin-top: 10px;
+    list-style: none;
+}
+
+.subcategory {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.4em;
+    border-bottom: 1px solid #c6c6c6;
+}
+
+.subcategory:last-child {
+    border-bottom: none;
+}
+
+.category-row {
+    flex: auto;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 15%;
+    min-width: fit-content;
+    margin: auto;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.category-row:hover, .subcategory:hover {
+    background: #e0e0e0;
+    font-weight: 700;
+}
+
+.category-row.full-width:hover {
+    background: none !important;
+    font-weight: normal;
+}
+
+.category-row.full-width span[title="categoryName"] {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.subcategory.active {
+    background-color: #c6c6c6;
+}
+
+/* New styles for the main tabs (Income and Expense) */
+.main-tabs {
+    display: flex;
+    justify-content: space-between;
+    border-color: #161616;
+}
+
+.main-tab-button {
+    flex: 1;
+    padding: 10px;
+    background: #161616;
+    border: none;
+    border-radius: unset;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.main-tab-button.active {
+    background: #004080;
+    color: #fff;
+}
+
+.main-tab-button:not(.active):hover {
+    background: #003366;
+}
+
+.charts-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+
+.chart-section {
+    height: 300px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    text-align: center;
+    padding: 1rem;
+}
+
+#category-spending-chart, #subcategory-spending-chart {
+    padding: 1rem;
+}
+
+#subcategory-trend-section {
+    display: none;
+    position: relative;
+    height: unset;
+    aspect-ratio: unset;
+    width: 100% !important;
+}
+
+/* CSS: Style the 'All' CTA */
+#show-all-trends-cta {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background-color: gray;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+#show-all-trends-cta.active {
+    background-color: #007bff;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .category-row {
+        all: unset;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        gap: 0.75rem;
+        padding: 5px;
+        border-bottom: 1px solid #c6c6c6;
+        width: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .category-row.full-width {
+        width: 100%;
+    }
+
+    .category:hover {
+        background: transparent;
+    }
+
+    .category-row.full-width {
+        border-bottom: unset;
+        border-radius: 8px;
+        box-shadow: var(--box-shadow);
+    }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Data</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/finance-manager-icon.png">
+    <link rel="shortcut icon" href="/resources/finance-manager-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/finance-manager-icon.png">
+    <link rel="stylesheet" href="styles/convert.css">
+    <link rel="stylesheet" href="styles/common.css">
+</head>
+<body>
+    <div class="container">
+        <p class="csv-info" style="display: none;">Data updated <span class="csv-updated-at" title=""></span></p>
+        <h1>Import Transactions Excel data</h1>
+        <input type="file" id="fileInput" accept=".xlsx, .xls">
+        <button id="convertButton">Convert to CSV</button>
+    </div>
+
+    <!-- Loader Icon -->
+    <div id="loader" class="loader" style="display: none;"></div>
+
+    <!-- Modal for user consent -->
+    <div id="consent-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Caution: Data Replace Alert</h2>
+            <p>You already have some transactional records available in your application. Do you want to Merge or Override with new data?</p>
+            <button id="mergeButton" class="modal-btn">Merge</button>
+            <button id="overrideButton" class="modal-btn">Override</button>
+        </div>
+    </div>
+
+    <!-- Modal for Duplicate Record Handling -->
+    <div id="duplicate-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Duplicate Records Found</h2>
+            <p><span class="duplicate-count">0</span> duplicate transactions were found. What would you like to do?</p>
+            <div class="duplicate-options">
+                <button id="skipButton" class="modal-btn">Skip Duplicates</button>
+                <button id="override-duplicates" class="modal-btn">Override Duplicates</button>
+                <button id="manualButton" class="modal-btn" disabled>Manual Review</button>
+            </div>
+            <!-- Area to display duplicate records for manual review (if needed) -->
+            <div id="duplicate-list" style="display: none;">
+                <h3>Review Duplicates:</h3>
+                <table id="duplicate-table">
+                    <tbody>
+                        <!-- Duplicate records will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/common.js"></script>
+    <script src="scripts/convert.js"></script>
+</body>
+</html>

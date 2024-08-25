@@ -1,0 +1,116 @@
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+        "summary summary"
+        "chart1 chart2"
+        "trends trends"
+        "recent yearly";
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-container h3 {
+    border-bottom: 2px solid #bebebe;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.dashboard-container .summary-section {
+    grid-area: summary;
+    line-height: 2.5;
+
+}
+
+.dashboard-container .charts-section:first-of-type {
+    grid-area: chart1;
+}
+
+.dashboard-container .charts-section:last-of-type {
+    grid-area: chart2;
+}
+
+.dashboard-container .trends-section {
+    grid-area: trends;
+}
+
+.dashboard-container .recent-transactions {
+    grid-area: recent;
+    align-self: self-start;
+}
+
+.dashboard-container .yearly-analysis {
+    grid-area: yearly;
+    align-self: self-start;
+}
+
+.dashboard-container section {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: var(--box-shadow);
+}
+
+.recent-transactions, .yearly-analysis {
+    text-align: left;
+}
+
+.recent-transaction, .yearly-analysis-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recent-transactions ul, .yearly-analysis ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recent-transactions li, .yearly-analysis li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.yearly-analysis li:last-child {
+    border-bottom: none;
+    font-weight: bold;
+}
+
+.yearly-analysis-item.header {
+    font-weight: bold;
+}
+
+.yearly-analysis-item.header {
+    font-weight: bold;
+}
+
+.yearly-analysis-item.current-year, .recent-transaction.current-month {
+    background-color: #76c211ad;
+    font-weight: bold;
+}
+
+.yearly-analysis-item.future-year, .recent-transaction.future-month {
+    color: grey;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "summary"
+            "chart1"
+            "chart2"
+            "trends"
+            "recent"
+            "yearly";
+    }
+    
+    .dashboard-container section {
+        width: 100%;
+    }
+}

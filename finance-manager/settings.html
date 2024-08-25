@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/finance-manager-icon.png">
+    <link rel="shortcut icon" href="/resources/finance-manager-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/finance-manager-icon.png">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <img class="hero-image" src="/resources/finance_manager_hero_no_bg.png" alt="Personal Finance Manager Logo">
+    </header>
+    <nav>
+        <div class="navigation">
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="accounts.html" id="accounts-link">Accounts</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#">Expenses</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="search.html" id="search-link">Search</a></li>
+                <li><a href="#" id="logoutButton" style="display: none;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="overlay"></div>
+    <main>
+        <h2 class="heading">Accounts</h2>
+        <div class="settings-container">
+            <ul class="setting-items">
+                <li class="tab-btn active" data-tab="accounts-settings">Accounts</li>
+                <li class="tab-btn" data-tab="categories-settings">Categories</li>
+            </ul>
+            <div id="accounts-settings" class="tab-content active">
+                <div class="group-container">
+                    <div class="cta-buttons sticky-container">
+                        <button id="add-account-group-btn">Add Account Group</button>
+                        <button id="add-account-btn">Add New Account</button>
+                    </div>
+                    <div id="account-groups-list" class="grid-container mapping-container"></div>
+                </div>
+                <div id="unmapped-accounts" class="mapping-container">
+                    <h3 id="unmapped-accounts-heading">Unmapped Accounts</h3>
+                    <div id="accounts-list"></div>
+                </div>
+            </div>
+            <div id="categories-settings" class="tab-content">
+                <div class="group-container">
+                    <div class="cta-buttons sticky-container">
+                        <button id="add-category-btn">Add Category</button>
+                        <button id="add-subcategory-btn">Add New Subcategory</button>
+                    </div>
+                    <div id="categories-list" class="grid-container mapping-container"></div>
+                </div>
+                <div id="unmapped-subcategories" class="mapping-container">
+                    <h3 id="unmapped-subcategories-heading">Unmapped Subcategories</h3>
+                    <div id="subcategories-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Group Modal -->
+        <div id="group-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-group-btn">&times;</span>
+                <h2 id="modal-title"></h2>
+                <form id="group-form">
+                    <input type="hidden" id="group-id">
+                    <div class="form-row">
+                        <label for="group-name">Group Name</label>
+                        <input type="text" id="group-name" name="group-name" class="field" required>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="submit-btn save-group-btn">Save</button>
+                        <button type="button" class="delete-btn delete-group-btn">Delete Group</button>
+                        <button type="button" class="cancel-btn cancel-group-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Accounts Modal -->
+        <div id="account-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-account-btn">&times;</span>
+                <h2 id="account-modal-title"></h2>
+                <form id="account-form">
+                    <input type="hidden" id="account-id">
+                    <div class="form-row">
+                        <label for="account-name">Account Name</label>
+                        <input type="text" id="account-name" name="account-name" class="field" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="account-group-select">Account Group</label>
+                        <select id="account-group-select" name="account-group-select" class="field" required></select>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="submit-btn save-account-btn">Save</button>
+                        <button type="button" class="delete-btn delete-account-btn">Delete Account</button>
+                        <button type="button" class="cancel-btn cancel-account-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Category Modal -->
+        <div id="category-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-category-btn">&times;</span>
+                <h2 id="category-modal-title"></h2>
+                <form id="category-form">
+                    <input type="hidden" id="category-id">
+                    <div class="form-row">
+                        <label for="category-name">Category Name</label>
+                        <input type="text" id="category-name" name="category-name" class="field" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="category-type">Category Type</label>
+                        <select id="category-type" name="category-type" class="field" required>
+                            <option value="Expense" selected>Expense</option>
+                            <option value="Income">Income</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="submit-btn save-category-btn">Save</button>
+                        <button type="button" class="delete-btn delete-category-btn">Delete Category</button>
+                        <button type="button" class="cancel-btn cancel-category-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Subcategory Modal -->
+        <div id="subcategory-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-subcategory-btn">&times;</span>
+                <h2 id="subcategory-modal-title"></h2>
+                <form id="subcategory-form">
+                    <input type="hidden" id="subcategory-id">
+                    <div class="form-row">
+                        <label for="subcategory-name">Subcategory Name</label>
+                        <input type="text" id="subcategory-name" name="subcategory-name" class="field" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="parent-category-select">Select Category</label>
+                        <select id="parent-category-select" name="parent-category-select" class="field" required>
+                            <option value="" disabled selected>Select Category</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="submit-btn save-subcategory-btn">Save</button>
+                        <button type="button" class="delete-btn delete-subcategory-btn">Delete Subcategory</button>
+                        <button type="button" class="cancel-btn cancel-subcategory-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Unmapped account select modal -->
+        <div id="unmapped-account-select-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-unmapped-account-select-btn">&times;</span>
+                <h3 id="unmapped-account-title"></h3>
+                <button id="delete-unmapped-account-btn" class="delete-btn"></button>
+                <p>Do you want to move <b><i id="unmapped-account-name"></i></b> to</p>
+                <ul id="unmapped-account-select-list"></ul>
+            </div>
+        </div>
+
+        <!-- Unmapped subcategory select modal -->
+        <div id="unmapped-subcategory-select-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button close-unmapped-subcategory-select-btn">&times;</span>
+                <h3 id="unmapped-subcategory-title"></h3>
+                <button id="delete-unmapped-subcategory-btn" class="delete-btn"></button>
+                <p>Do you want to move <b><i id="unmapped-subcategory-name"></i></b> to</p>
+                <ul id="unmapped-subcategory-select-list"></ul>
+            </div>
+        </div>
+
+        <!-- Scroll to top -->
+        <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
+    </main>
+    <footer>
+        <p>&copy; 2024 Personal Finance Manager</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup for row details -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="row-details"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav" style="display: none;">
+        <button class="mobile-nav-button" data-page="transactions.html">
+            <div class="icon-text">
+                &#128195;
+                <span>Trans</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="statistics.html">
+            <div class="icon-text">
+                &#128200;
+                <span>Stats</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="categories.html">
+            <div class="icon-text">
+                &#128179;
+                <span>Categories</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="accounts.html">
+            <div class="icon-text">
+                &#x1F4B0;
+                <span>Accounts</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button search" data-page="search.html">
+            <div class="icon-text">
+                &#128269;
+                <span>Search</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="settings.html">
+            <div class="icon-text">
+                &#9881;
+                <span>Settings</span>
+            </div>
+        </button>
+    </div>
+
+    <script src="scripts/common.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/settings.js"></script>
+</body>
+
+</html>

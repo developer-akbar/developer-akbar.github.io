@@ -1,0 +1,249 @@
+/* Tab navigation */
+.tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    /* background-color: #f0f0f0; */
+    /* border: 1px solid #ccc; */
+    border-bottom: none;
+    margin-right: 0.2rem;
+}
+
+.tab-btn.active {
+    background-color: #4caf50;
+    /* border: 1px solid #ffffff; */
+    border-bottom: 1px solid white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.mapping-container {
+    padding: 0 1rem 1rem;
+}
+
+.cta-buttons {
+    padding: 1rem;
+}
+
+.group-container .group-box {
+    flex: 1;
+    align-self: self-start;
+    position: relative;
+}
+
+.group-container .group-box h3 {
+    margin-top: 0;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5em;
+}
+
+.group-container .group-box h3 .edit-group {
+    margin-left: 1rem;
+    cursor: pointer;
+}
+
+.group-container .group-box .mapped-accounts,
+.group-container .group-box .mapped-subcategories {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 2rem;
+    border: 1px solid #a5a5a5;
+    position: relative;
+    background-color: gray;
+}
+
+.add-account-btn::after, .add-subcategory-btn::after {
+    content: "\2795";
+    position: absolute;
+    bottom: 0.25rem;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.group-container .group-box .mapped-accounts li,
+.group-container .group-box .mapped-subcategories li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    gap: 0.5rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.group-container .group-box .mapped-accounts li .account-name,
+.group-container .group-box .mapped-subcategories li .subcategory-name {
+    flex: 1;
+}
+
+.group-container .group-box .mapped-accounts li .edit-account,
+.group-container .group-box .mapped-subcategories li .edit-subcategory {
+    margin-left: 1rem;
+    cursor: pointer;
+}
+
+.group-box li:hover {
+    background-color: rgb(172, 222, 247) !important;
+}
+
+.mapped-accounts:not(:has(li)),
+.mapped-subcategories:not(:has(li)) {
+    border: 1px solid #8f8f8f;
+    min-height: 30px;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.5rem;
+}
+
+#accounts-list,
+#subcategories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#unmapped-accounts-heading,
+#unmapped-subcategories-heading {
+    margin: 0.5rem;
+}
+
+#accounts-list .account-item,
+#subcategories-list .subcategory-item {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    cursor: pointer;
+}
+
+.form-row {
+    margin-bottom: 1rem;
+}
+
+.submit-btn {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: #888;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+
+    .edit-group,
+    .remove-btn {
+        display: none;
+    }
+
+    .group-box h3:hover .edit-group {
+        display: inline;
+    }
+
+    .mapped-accounts li:hover .remove-btn,
+    .mapped-subcategories li:hover .remove-btn {
+        color: red;
+        display: inline;
+    }
+}
+
+#unmapped-subcategory-select-modal,
+#unmapped-account-select-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 56px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#unmapped-subcategory-select-modal .modal-content,
+#unmapped-account-select-modal .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+}
+
+#unmapped-subcategory-select-list,
+#unmapped-account-select-list {
+    list-style: none;
+    padding: 0;
+}
+
+#unmapped-subcategory-select-list li,
+#unmapped-account-select-list li {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+#unmapped-account-title, #unmapped-subcategory-title {
+    text-align: center;
+    margin-bottom: .75em;
+}
+
+.modal-content p {
+    padding-block: .75em;
+}
+
+@media (max-width: 768px) {
+    .flex-container {
+        flex-direction: column;
+    }
+
+    .grid-container {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .group-box {
+        width: 100%;
+    }
+}

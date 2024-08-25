@@ -1,0 +1,122 @@
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    padding-block: 10px;
+}
+
+.period-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.period-navigation button {
+    background: #004080;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.period-navigation button:hover {
+    background: #003366;
+}
+
+.period-display {
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.totals {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.day-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#monthly-transactions .transaction-row, #total-transactions .transaction-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    margin-inline: 1rem;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.transaction-row span:not(:first-child) {
+    flex: 1;
+}
+
+.transaction-row:last-child {
+    border-bottom: none;
+}
+
+.amount.income, #daily-income, #monthly-income, #total-income {
+    color: blue;
+}
+
+.amount.expense, #daily-expenses, #monthly-expenses, #total-expenses {
+    color: red;
+}
+
+.floating-btn {
+    position: fixed;
+    bottom: 4rem;
+    left: 0.75rem;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+@keyframes flash {
+    0% {
+        background-color: yellow;
+    }
+    50% {
+        background-color: transparent;
+    }
+    100% {
+        background-color: yellow;
+    }
+}
+
+.transaction-row.highlight {
+    animation: flash 1s ease;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .tabs {
+        padding-block: unset !important;
+    }
+
+    .tab-button {
+        flex: 1;
+    }
+    
+    .transaction-list {
+        gap: unset;
+    }
+}

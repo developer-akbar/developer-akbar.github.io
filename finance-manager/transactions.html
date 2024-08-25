@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/finance-manager-icon.png">
+    <link rel="shortcut icon" href="/resources/finance-manager-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/finance-manager-icon.png">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/transactions.css">
+    <link rel="stylesheet" href="styles/new-transaction.css">
+</head>
+
+<body>
+    <header>
+        <img class="hero-image" src="/resources/finance_manager_hero_no_bg.png" alt="Personal Finance Manager Logo">
+    </header>
+    <nav>
+        <div class="navigation">
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="accounts.html" id="accounts-link">Accounts</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#">Expenses</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="search.html" id="search-link">Search</a></li>
+                <li><a href="#" id="logoutButton" style="display: none;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="overlay"></div>
+    <main style="display: none;">
+        <h2 class="heading">Transactions</h2>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-wrapper sticky-container">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="daily">Daily</button>
+                <button class="tab-button" data-tab="monthly">Monthly</button>
+                <button class="tab-button" data-tab="total">Total</button>
+            </div>
+            <div id="daily" class="tab-content active content-container">
+                <div class="period-navigation">
+                    <button id="prev-period">&lt;</button>
+                    <span id="current-period" class="period-display"></span>
+                    <button id="next-period">&gt;</button>
+                </div>
+                <div class="totals">
+                    <div id="daily-income">
+                        <p>Income</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="daily-expenses">
+                        <p>Expenses</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="daily-balance">
+                        <p>Balance</p>
+                        <p>0.00</p>
+                    </div>
+                </div>
+                <div class="selected-total-wrapper mb-16" style="display: none;">
+                    <span id="selected-total"></span>
+                    <span id="total-selected-transfers"></span>
+                    <span id="delete-selected-transactions">&#10060; Delete</span>
+                </div>
+            </div>
+            <div id="monthly" class="tab-content">
+                <div class="period-navigation">
+                    <button id="prev-year">&lt;</button>
+                    <span id="current-year" class="period-display"></span>
+                    <button id="next-year">&gt;</button>
+                </div>
+                <div class="totals">
+                    <div id="monthly-income">
+                        <p>Income</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="monthly-expenses">
+                        <p>Expenses</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="monthly-balance">
+                        <p>Balance</p>
+                        <p>0.00</p>
+                    </div>
+                </div>
+            </div>
+            <div id="total" class="tab-content">
+                <div class="totals">
+                    <span id="total-income">
+                        <p>Income</p>
+                        <p>0.00</p>
+                    </span>
+                    <span id="total-expenses">
+                        <p>Expenses</p>
+                        <p>0.00</p>
+                    </span>
+                    <span id="total-balance">
+                        <p>Balance</p>
+                        <p>0.00</p>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Display Starts -->
+        <div id="transactions" class="transactions content-container viewable-content">
+            <!-- Daily Transactions -->
+            <div id="daily-transactions" class="transaction-list"></div>
+            <!-- Monthly Transactions -->
+            <div id="monthly-transactions" class="transaction-list"></div>
+            <!-- Total Transactions -->
+            <div id="total-transactions" class="transaction-list"></div>
+        </div>
+        <!-- Transactions Display Ends -->
+
+        <button id="add-transaction-btn" class="floating-btn">+</button>
+
+        <!-- Scroll to top -->
+        <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
+
+        <div id="transaction-modal" class="modal">
+            <div class="transaction-modal-content">
+                <form id="transaction-form">
+                    <input type="hidden" id="transaction-id" value="" readonly>
+                    <div class="form-row">
+                        <div id="type-container" class="custom-dropdown">
+                            <div id="type-options" class="field type-options">
+                                <span class="type-option income" data-value="Income">Income</span>
+                                <span class="type-option expense active" data-value="Expense">Expense</span>
+                                <span class="type-option" data-value="Transfer-Out">Transfer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" class="field" value="">
+                    </div>
+                    <div id="non-transfer-fields">
+                        <div class="form-row" id="account-row">
+                            <label for="amount">Account</label>
+                            <div id="account-container" class="field custom-dropdown">
+                                <span id="account-btn" class="dropdown-btn"></span>
+                            </div>
+                        </div>
+                        <div class="form-row" id="category-row">
+                            <label for="amount">Category</label>
+                            <div id="category-container" class="field custom-dropdown">
+                                <span id="category-btn" class="dropdown-btn"></span>
+                            </div>
+                        </div>
+                        <div class="form-row" id="subcategory-row">
+                            <label for="amount">Subcategory</label>
+                            <div id="subcategory-container" class="field custom-dropdown">
+                                <span id="subcategory-btn" class="dropdown-btn"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="transfer-fields" style="display: none;">
+                        <div class="form-row" id="from-row">
+                            <label for="amount">From</label>
+                            <div id="from-account-container" class="field custom-dropdown">
+                                <span id="from-account-btn" class="dropdown-btn"></span>
+                            </div>
+                        </div>
+                        <div class="form-row" id="to-row">
+                            <label for="amount">To</label>
+                            <div id="to-account-container" class="field custom-dropdown">
+                                <span id="to-account-btn" class="dropdown-btn"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" name="amount" class="field">
+                    </div>
+                    <div class="form-row">
+                        <label for="note">Note</label>
+                        <div class="note-input">
+                            <input type="text" id="note" name="note" class="field" autocomplete="off">
+                            <div id="suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="description">Description</label>
+                        <textarea rows="4" id="description" name="description" class="field"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <button type="submit" class="submit-btn">Save</button>
+                        <button type="button" class="delete-button" style="display: none;">Delete</button>
+                        <button type="button" class="cancel-btn">Cancel</button>
+                    </div>
+                </form>
+                <div id="account-grid" class="grid hidden"></div>
+                <div id="category-grid" class="grid hidden"></div>
+                <div id="subcategory-grid" class="grid hidden"></div>
+                <div id="from-account-grid" class="grid hidden"></div>
+                <div id="to-account-grid" class="grid hidden"></div>
+            </div>
+        </div>
+
+
+    </main>
+    <footer style="display: none;">
+        <p>&copy; 2024 Personal Finance Manager</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup for row details -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="row-details"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav" style="display: none;">
+        <button class="mobile-nav-button" data-page="transactions.html">
+            <div class="icon-text">
+                &#128195;
+                <span>Trans</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="statistics.html">
+            <div class="icon-text">
+                &#128200;
+                <span>Stats</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="categories.html">
+            <div class="icon-text">
+                &#128179;
+                <span>Categories</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="accounts.html">
+            <div class="icon-text">
+                &#x1F4B0;
+                <span>Accounts</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button search" data-page="search.html">
+            <div class="icon-text">
+                &#128269;
+                <span>Search</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="settings.html">
+            <div class="icon-text">
+                &#9881;
+                <span>Settings</span>
+            </div>
+        </button>
+    </div>
+
+    <script src="scripts/common.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/transactions.js"></script>
+    <script src="scripts/new-transaction.js"></script>
+</body>
+
+</html>

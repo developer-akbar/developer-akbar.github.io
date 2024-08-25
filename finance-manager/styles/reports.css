@@ -1,0 +1,252 @@
+/* reports.css */
+.monthlyReports {
+    display: none;
+    padding-left: 20px;
+    border-left: 1px solid #ccc;
+}
+
+.show {
+    display: block;
+}
+
+.month {
+    cursor: pointer;
+}
+
+.year {
+    cursor: pointer;
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.popup-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 80%;
+    max-width: 350px;
+    /* height: 80vh; */
+    overflow: auto;
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 999;
+}
+
+.popup-container.list-day-expenses-container {
+    max-width: 60dvw;
+}
+
+.popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    text-align: center;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.amount {
+    text-align: right !important;
+}
+
+.popup table {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.popup table th,
+.popup table td {
+    padding: 8px;
+}
+
+.popup table th {
+    background-color: #333;
+}
+
+.popup table tbody tr:nth-child(even) {
+    background-color: #444;
+}
+
+.popup table tbody tr:hover {
+    background-color: #555;
+}
+
+.popup button {
+    padding: 10px 20px;
+    background-color: #ff5722;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.popup button:hover {
+    background-color: #f44336;
+}
+
+#expenses-table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+#expenses-table th,
+#expenses-table td {
+    padding: 10px;
+}
+
+span.category-total-expenses {
+    padding-left: 10px;
+}
+
+td.category-name {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+.category-name span::first-letter {
+    text-transform: capitalize;
+}
+
+.yearly-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+    padding: 0.5rem;
+}
+
+.calendar-view-popup-container {
+    max-width: 35dvw;
+}
+
+.calendar-view-popup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    color: #000;
+    max-width: 35dvw;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.day {
+    width: calc(100% / 7);
+    text-align: center;
+}
+
+.week-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.day-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    width: 40px;
+    padding: 10px 5px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+}
+
+.day-cell .day-total {
+    color: red;
+    font-weight: 900;
+}
+
+.day-cell:not(.empty):hover {
+    background-color: #ac2a2a;
+    cursor: pointer;
+}
+
+.expense-item {
+    margin-bottom: 5px;
+    padding: 2px 5px;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.close-button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #0056b3;
+}
+
+.expenses-list {
+    color: #000;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.transaction-category {
+    width: max-content;
+    opacity: 0.7;
+    font-size: 11px;
+    margin-block: 0.5rem;
+}

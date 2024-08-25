@@ -1,0 +1,143 @@
+/* accounts.css */
+#accounts-section {
+    background-color: #f4f6f9;
+    padding: 0.5em 0;
+}
+
+.period-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.period-navigation button {
+    background: #004080;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 5px;
+}
+
+.period-navigation button:hover {
+    background: #003366;
+}
+
+.period-display {
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.day-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transaction-row:last-child {
+    border-bottom: none;
+}
+
+.transaction-row .amount {
+    text-align: right;
+}
+
+.selected-account {
+    font-weight: bold;
+}
+
+.accounts-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.totals {
+    background: #fff;
+    border-bottom: 1px solid #bfbfbf;
+    padding: 0.5em;
+}
+
+#accounts-balances {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    
+}
+
+.group-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75em;
+}
+
+.group-container h3 {
+    width: 100%;
+    padding: 0.5em 1rem;
+}
+
+.account-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65em 1rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    gap: 0.5rem;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    flex-basis: calc(20% - 0.5rem);
+}
+
+.account-row:hover {
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+
+.account-row span:first-child {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#back-button {
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #accounts-balances {
+        flex-direction: column;
+    }
+
+    .group-container {
+        gap: unset;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .account-row {
+        width: unset;
+    }
+
+    #back-button {
+        color: #fff;
+    }
+}

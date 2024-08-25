@@ -1,0 +1,240 @@
+/* search.css */
+
+.search-container {
+    margin: auto;
+    padding: 20px;
+    max-width: 800px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1rem;
+    padding-inline: 5px;
+    margin-bottom: 10px;
+}
+
+.search-input-field {
+    width: 300px;
+}
+
+.selected-results {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    flex-direction: column;
+}
+
+.search-results-wrapper {
+    position: relative;
+}
+
+#searchResults {
+    padding-inline: 5px;
+    flex-grow: 1;
+    overflow-x: auto;
+}
+
+.filter-wrapper {
+    display: none;
+    width: 30%;
+    flex-direction: column;
+    gap: 1rem;
+    margin-inline: 0.5rem;
+    padding-right: 1rem;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.filter-item {
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.filter-options {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.amount-range, .date-range {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+}
+
+.amount-range input, #custom-start, #custom-end {
+    min-width: fit-content;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.custom-select-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.custom-options {
+    display: block;
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #fff;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 99;
+    flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-options .custom-option {
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-width: max-content;
+}
+
+.custom-options .custom-option > *:hover {
+    cursor: pointer;
+}
+
+.custom-options .custom-option:hover {
+    background: #f0f0f0;
+}
+
+.custom-options .custom-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.selected-filters {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.selected-filters span {
+    background: #f0f0f0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.selected-filters span .remove-filter {
+    margin-left: 10px;
+    cursor: pointer;
+    color: red;
+    font-weight: bold;
+}
+
+/* Clear all button */
+.clear-filters {
+    display: none;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    background: #ffcc00;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.clear-filters:hover {
+    background: #ff9900;
+}
+
+.filter-toggle {
+    cursor: pointer;
+    font-size: 24px;
+    vertical-align: middle;
+    padding-inline: 5px;
+    border-radius: 5px;
+    font-size: 1.65rem;
+    font-weight: bold;
+}
+
+.filter-toggle.active {
+    background: #31b8e5;
+    position: relative;
+}
+
+.filter-toggle.active::after {
+    content: attr(data-filters-count);
+    color: #fff;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .8rem;
+    height: 20px;
+    width: 20px;
+    top: -20%;
+    right: -20%;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background-color: red;
+    box-sizing: border-box;
+}
+
+.search-results-container {
+    display: flex;
+    align-items: flex-start;
+    margin-block: 1rem;
+}
+
+.period-navigation {
+    display: none;
+}
+
+.custom-period {
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+#searchResults .transaction-day {
+    display: none;
+}
+
+.no-results-info {
+    margin: 0.75rem;
+}
+
+.filter-option-count {
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    #searchResults .transaction-row .date {
+        display: block;
+    }
+
+    .filter-wrapper {
+        min-width: 30%;
+        max-height: calc(100dvh - 3rem);
+    }
+
+    .amount-range input, #custom-start, #custom-end {
+        min-width: unset;
+    }
+}

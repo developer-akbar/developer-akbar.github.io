@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/finance-manager-icon.png">
+    <link rel="shortcut icon" href="/resources/finance-manager-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/finance-manager-icon.png">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/accounts.css">
+</head>
+
+<body>
+    <header>
+        <img class="hero-image" src="/resources/finance_manager_hero_no_bg.png" alt="Personal Finance Manager Logo">
+    </header>
+    <nav>
+        <div class="navigation">
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="accounts.html" id="accounts-link">Accounts</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#">Expenses</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="search.html" id="search-link">Search</a></li>
+                <li><a href="#" id="logoutButton" style="display: none;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="overlay"></div>
+    <main>
+        <h2 class="heading">Accounts</h2>
+
+        <!-- Accounts Section -->
+        <div id="accounts-section">
+            <div class="totals sticky-container">
+                <div id="assets" class="positive">
+                    <p>Assets</p>
+                    <p>0.00</p>
+                </div>
+                <div id="liabilities" class="negative">
+                    <p>Liabilities</p>
+                    <p>0.00</p>
+                </div>
+                <div id="balance" class="positive">
+                    <p>Balance</p>
+                    <p>0.00</p>
+                </div>
+            </div>
+            <div id="accounts-balances" class="accounts-balances"></div>
+        </div>
+
+        
+
+        <!-- Daily Transactions Section -->
+        <div id="daily-transactions-section" class="daily-transactions-section" style="display: none;">
+            <div class="sticky-container">
+                <div class="mobile-header">
+                    <span id="back-button">&larr;</span>
+                    <span id="selected-account" class="selected-account"></span>
+                </div>
+                <div class="period-navigation">
+                    <button id="prev-period">&lt;</button>
+                    <span id="current-period" class="period-display"></span>
+                    <button id="next-period">&gt;</button>
+                </div>
+                <div class="totals">
+                    <div id="account-deposits" class="positive">
+                        <p>Deposits</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="account-withdrawal" class="negative">
+                        <p>Withdrawal</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="account-total">
+                        <p>Total</p>
+                        <p>0.00</p>
+                    </div>
+                    <div id="account-balance" class="positive">
+                        <p>Balance</p>
+                        <p>0.00</p>
+                    </div>
+                </div>
+                <div class="selected-total-wrapper mb-16" style="display: none;">
+                    <span id="selected-total"></span>
+                    <span id="delete-selected-transactions">&#10060; Delete</span>
+                    <span id="total-selected-transfers"></span>
+                </div>
+            </div>
+
+            <div id="account-transactions" class="transaction-list content-container viewable-content"></div>
+        </div>
+
+        <!-- Scroll to top -->
+        <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
+    </main>
+    <footer>
+        <p>&copy; 2024 Personal Finance Manager</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup for row details -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="row-details"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav" style="display: none;">
+        <button class="mobile-nav-button" data-page="transactions.html">
+            <div class="icon-text">
+                &#128195;
+                <span>Trans</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="statistics.html">
+            <div class="icon-text">
+                &#128200;
+                <span>Stats</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="categories.html">
+            <div class="icon-text">
+                &#128179;
+                <span>Categories</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="accounts.html">
+            <div class="icon-text">
+                &#x1F4B0;
+                <span>Accounts</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button search" data-page="search.html">
+            <div class="icon-text">
+                &#128269;
+                <span>Search</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="settings.html">
+            <div class="icon-text">
+                &#9881;
+                <span>Settings</span>
+            </div>
+        </button>
+    </div>
+
+    <script src="scripts/common.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/accounts.js"></script>
+</body>
+
+</html>

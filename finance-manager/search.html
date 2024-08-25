@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/resources/finance-manager-icon.png">
+    <link rel="shortcut icon" href="/resources/finance-manager-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resources/finance-manager-icon.png">
+    <link rel="icon" type="image/x-icon" href="/resources/finance_manager_icon-red.png">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="styles/search.css">
+</head>
+
+<body>
+    <header>
+        <img class="hero-image" src="/resources/finance_manager_hero_no_bg.png" alt="Personal Finance Manager Logo">
+    </header>
+    <nav>
+        <div class="navigation">
+            <ul>
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="accounts.html" id="accounts-link">Accounts</a></li>
+                <li><a href="categories.html">Categories</a></li>
+                <li><a href="#">Expenses</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="search.html" id="search-link">Search</a></li>
+                <li><a href="#" id="logoutButton" style="display: none;">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="overlay"></div>
+    <main style="display: none;">
+        <h2 class="heading">Search</h2>
+
+        <div class="mobile-header"></div>
+        <!-- Search Section -->
+        <div id="search-section" class="search-section">
+            <div class="sticky-container">
+                <div class="content-container">
+                    <form class="search-form">
+                        <div class="search-input-field">
+                            <input type="text" id="searchInput" placeholder="Search..." autocomplete="off" />
+                            <div id="suggestions"></div>
+                        </div>
+                        <button type="submit" id="searchButton">Search</button>
+
+                        <!-- Filter Toggle Icon -->
+                        <span class="filter-toggle" id="filter-toggle" style="display: none;">🝖</span>
+                    </form>
+
+                    <div class="totals">
+                        <span id="total-income" class="income"></span>
+                        <span id="total-expenses" class="expense"></span>
+                        <span id="total-transfers" class="transfer-out"></span>
+                    </div>
+
+                    <div class="period-navigation" id="period-navigation">
+                        <button id="prev-period">&lt;</button>
+                        <span id="current-period" class="period-display"></span>
+                        <button id="next-period">&gt;</button>
+                    </div>
+                    <div class="custom-period" style="display: none;"></div>
+
+                    <div class="selected-results">
+                        <p class="search-count"></p>
+                        <div class="selected-total-wrapper" style="display: none;">
+                            <span id="selected-total"></span>
+                            <span id="delete-selected-transactions">&#10060; Delete</span>
+                            <span id="total-selected-transfers"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-results-wrapper">
+                <!-- Filters Section Starts -->
+                <div class="filter-wrapper" id="filter-wrapper">
+
+                    <!-- Selected Filters Section -->
+                    <div class="selected-filters" id="selected-filters"></div>
+
+                    <!-- Clear filter button -->
+                    <button class="clear-filters" id="clear-filters">Clear Filters</button>
+
+                    <div class="filter-item">
+                        <label for="period">Period</label>
+                        <select id="period" class="filter-options">
+                            <option value="all">All</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="annually">Annually</option>
+                            <option value="financial-yearly">Financial Yearly</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                        <div class="date-range">
+                            <input type="date" id="custom-start" style="display:none;">
+                            <input type="date" id="custom-end" style="display:none;">
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <p>Account <span class="account-count filter-option-count"></span></p>
+                        <div class="custom-select-wrapper" id="account-select">
+                            <div class="custom-options">
+                                <div class="custom-option">
+                                    <input type="checkbox" id="account-all" value="all">
+                                    <label for="account-all">All</label>
+                                </div>
+                                <!-- Populate dynamically with accounts -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <p>Category <span class="category-count filter-option-count"></span></p>
+                        <div class="custom-select-wrapper" id="category-select">
+                            <div class="custom-options">
+                                <div class="custom-option">
+                                    <input type="checkbox" id="category-all" value="all">
+                                    <label for="category-all">All</label>
+                                </div>
+                                <!-- Populate dynamically with categories -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <p class="range">Amount Range</p>
+                        <div class="amount-range">
+                            <input type="number" id="min-amount" placeholder="Min">
+                            <input type="number" id="max-amount" placeholder="Max">
+                        </div>
+                    </div>
+
+                    <div class="filter-item">
+                        <p>Type</p>
+                        <div class="custom-select-wrapper" id="incomeExpense-select">
+                            <div class="custom-options">
+                                <div class="custom-option">
+                                    <input type="checkbox" id="type-all" value="all">
+                                    <label for="type-all">All</label>
+                                </div>
+                                <div class="custom-option">
+                                    <input type="checkbox" id="type-income" value="Income">
+                                    <label for="type-income">Income</label>
+                                </div>
+                                <div class="custom-option">
+                                    <input type="checkbox" id="type-expense" value="Expense">
+                                    <label for="type-expense">Expense</label>
+                                </div>
+                                <div class="custom-option">
+                                    <input type="checkbox" id="type-transfer-out" value="Transfer-Out">
+                                    <label for="type-transfer-out">Transfer-Out</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Filters Section Ends -->
+
+                <div id="searchResults" class="viewable-content"></div>
+            </div>
+        </div>
+        <!-- End Search Section -->
+
+        <!-- Scroll to top -->
+        <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
+    </main>
+    <footer style="display: none;">
+        <p>&copy; 2024 Personal Finance Manager</p>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup for row details -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="row-details"></div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="mobile-nav" style="display: none;">
+        <button class="mobile-nav-button" data-page="transactions.html">
+            <div class="icon-text">
+                &#128195;
+                <span>Trans</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="statistics.html">
+            <div class="icon-text">
+                &#128200;
+                <span>Stats</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="categories.html">
+            <div class="icon-text">
+                &#128179;
+                <span>Categories</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="accounts.html">
+            <div class="icon-text">
+                &#x1F4B0;
+                <span>Accounts</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button search" data-page="search.html">
+            <div class="icon-text">
+                &#128269;
+                <span>Search</span>
+            </div>
+        </button>
+        <button class="mobile-nav-button" data-page="settings.html">
+            <div class="icon-text">
+                &#9881;
+                <span>Settings</span>
+            </div>
+        </button>
+    </div>
+
+    <script src="scripts/common.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/search.js"></script>
+</body>
+
+</html>
