@@ -93,7 +93,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     function createGridHeader(label) {
         const header = document.createElement('div');
         header.className = 'grid-header';
-        header.textContent = label;
+
+        const pElement = document.createElement('p');
+        pElement.textContent = label;
+
+        const linkElement = document.createElement('a');
+        linkElement.href = 'settings.html';
+        linkElement.textContent = 'Add new';
+
+        header.appendChild(pElement);
+        header.appendChild(linkElement);
         return header.outerHTML;
     }
 
