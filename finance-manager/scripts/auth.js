@@ -1,12 +1,20 @@
 // auth.js
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('username').value = 'admin';
+    document.getElementById('password').value = 'admin';
+
     const loginModal = document.getElementById('loginModal');
     const loginForm = document.getElementById('loginForm');
     const logoutButton = document.getElementById('logoutButton');
 
-    const validUsername = "akbar";
-    const validPassword = "211200";
+    const validUsername = "admin";
+    const validPassword = "admin";
+
+    const info = document.createElement('p');
+    info.className = 'mb-16';
+    info.textContent = 'Please click on Login to continue. User creation is in progress';
+    loginForm.append(info);
 
     function showLoginModal() {
         loginModal.style.display = "block";
