@@ -367,7 +367,7 @@ button:disabled, button:disabled:hover {
     justify-content: center;
     align-items: center;
     position: fixed;
-    z-index: 999;
+    z-index: 1050;
     left: 0;
     top: 0;
     width: 100%;
@@ -630,7 +630,7 @@ button:disabled, button:disabled:hover {
         display: flex;
         justify-content: space-around;
         background: #004080;
-        z-index: 999;
+        z-index: 1100;
         height: 56px;
     }
 
