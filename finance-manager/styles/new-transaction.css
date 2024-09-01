@@ -58,11 +58,13 @@
 }
 
 .cancel-btn {
-    background-color: #888;
+    background-color: transparent;
+    color: #000;
+    border: 1px solid #000;
 }
 
 .cancel-btn:hover {
-    background-color: #888888c2;
+    background-color: #cccccc32;
 }
 
 .custom-dropdown {

@@ -44,12 +44,6 @@
     overflow-y: auto;
 }
 
-.day-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 #monthly-transactions .transaction-row, #total-transactions .transaction-row {
     display: flex;
     justify-content: space-between;

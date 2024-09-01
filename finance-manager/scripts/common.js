@@ -144,6 +144,7 @@ function createTransactionRow(expense) {
     row.id = `transaction-${expense.ID}`;
 
     const checkboxCell = row.insertCell();
+    checkboxCell.className = 'transaction-checkbox';
     const inputElement = document.createElement('input');
     inputElement.type = 'checkbox';
     inputElement.className = 'select-checkbox';
@@ -152,6 +153,7 @@ function createTransactionRow(expense) {
     checkboxCell.appendChild(inputElement);
 
     const dateElement = row.insertCell();
+    dateElement.className = 'transaction-date';
     const dateCell = document.createElement('p');
     dateCell.textContent = new Date(convertDateFormat(expense.Date)).toDateString();
     dateCell.className = 'date';

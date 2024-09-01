@@ -412,6 +412,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             row.classList.add('transaction-row');
 
             const checkboxCell = row.insertCell();
+            checkboxCell.className = 'transaction-checkbox';
             const inputElement = document.createElement('input');
             inputElement.type = 'checkbox';
             inputElement.className = 'select-checkbox';
@@ -420,6 +421,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             checkboxCell.appendChild(inputElement);
 
             const dateElement = row.insertCell();
+            dateElement.className = 'transaction-date';
             const dateCell = document.createElement('p');
             dateCell.textContent = new Date(convertDateFormat(expense.Date)).toDateString();
             dateCell.className = 'date';
@@ -430,6 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             dateElement.appendChild(categoryElement);
 
             const noteCell = row.insertCell();
+            noteCell.className = 'note';
             noteCell.textContent = expense.Note;
             noteCell.classList.add('note');
 

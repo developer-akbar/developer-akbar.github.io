@@ -204,31 +204,29 @@ table tr:nth-child(even) {
 }
 
 /* Setting fixed widths for specific columns */
-table td:nth-child(1) {
+table td.transaction-checkbox {
     width: 5%;
 }
 
-table td:nth-child(2) {
+table td.transaction-date {
     width: 20%;
 }
 
-table td:nth-child(3) {
+table td.note {
     width: 25%;
-}
-
-table td:nth-child(4) {
-    width: 15%;
 }
 
 /* Setting a maximum width for the description cell and enabling word wrapping */
 table td.description {
     width: 35%;
     max-width: 0;
-    /* Ensures content doesn't stretch beyond width */
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
-    /* Ensures long text breaks to new lines */
+}
+
+table td.amount {
+    width: 15%;
 }
 
 .no-transactions-msg {
@@ -342,8 +340,7 @@ button:disabled, button:disabled:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #e0e0e0;
-    padding-inline: 5px;
+    color: darkgreen;
     border-radius: 5px;
 }
 
@@ -682,11 +679,6 @@ button:disabled, button:disabled:hover {
     .tabs {
         background: #003366;
         color: #fff;
-        margin-bottom: 10px;
-    }
-
-    .transaction-row {
-        padding: 10px !important;
         margin-bottom: 10px;
     }
 

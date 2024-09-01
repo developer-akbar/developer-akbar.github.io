@@ -159,6 +159,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         resetTransactionForm();
 
         document.querySelector('.submit-btn').style.display = 'block';
+        document.querySelector('.submit-btn').style.backgroundColor = '#ff0000b8';
+        document.querySelectorAll('.field').forEach((thisElement) => {
+            if (!thisElement.classList.contains('type-options')) {
+                thisElement.style.borderBottom = '1px solid #ff00005c';
+            }
+        });
         document.querySelector('.delete-button').style.display = 'none';
         populateDropdowns();
         document.querySelector('.type-option[data-value="Expense"]').classList.add('active');
@@ -178,6 +184,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (isTransfer) {
                 fromAccountBtn.textContent = accountBtn.textContent;
                 toAccountBtn.textContent = '';
+                document.querySelector('.submit-btn').style.backgroundColor = 'gray';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid gray';
+                    }
+                });
                 toggleGrid(fromAccountGrid);
             } else {
                 categoryBtn.textContent = '';
@@ -185,6 +197,21 @@ document.addEventListener('DOMContentLoaded', async function () {
                 document.getElementById('subcategory-row').style.display = 'none';
                 toggleGrid(accountGrid);
                 populateDropdowns();
+            }
+            if (event.target.dataset.value === 'Income') {
+                document.querySelector('.submit-btn').style.backgroundColor = '#004080';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid #004080b3';
+                    }
+                });
+            } else if (event.target.dataset.value === 'Expense') {
+                document.querySelector('.submit-btn').style.backgroundColor = '#ff0000b8';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid #ff00005c';
+                    }
+                });
             }
             fetchDropdowns(); // update account, category dropdown values on change of type
         }
