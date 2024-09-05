@@ -97,19 +97,12 @@
     gap: 0.5rem;
     align-items: center;
     transition: background-color 0.3s ease;
-    flex-basis: calc(20% - 0.5rem);
+    flex-basis: calc(25% - 0.5rem);
 }
 
 .account-row:hover {
     cursor: pointer;
     background-color: #e0e0e0;
-}
-
-.account-row span:first-child {
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
 }
 
 #back-button {

@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const accountsBalancesContainer = document.getElementById('accounts-balances');
         accountsBalancesContainer.innerHTML = ''; // Clear previous balances
 
-        if (masterData === null) return;
+        if (localStorage.getItem('masterExpenses') === null) return;
 
         // Calculate account balances
-        const accountBalances = masterData.reduce((acc, expense) => {
+        const accountBalances = JSON.parse(localStorage.getItem('masterExpenses')).reduce((acc, expense) => {
             const account = expense.Account;
             const amount = parseFloat(expense.INR);
             if (!acc[account]) {
@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     accountContainer.dataset.account = account;
 
                     const accountName = document.createElement('span');
+                    accountName.className = 'line-clamp';
                     accountName.title = account;
                     accountName.textContent = account;
 
@@ -184,12 +185,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         accountTransactionsContainer.innerHTML = ''; // Clear previous transactions
 
         // Filter transactions for the current month and year for the selected account
-        const filteredTransactions = masterData.filter(expense => {
+        const filteredTransactions = JSON.parse(localStorage.getItem('masterExpenses')).filter(expense => {
             const expenseDate = new Date(convertDateFormat(expense.Date));
             const matchesDate = expenseDate.getMonth() === currentDailyDate.getMonth() && expenseDate.getFullYear() === currentDailyDate.getFullYear();
             const matchesAccount = expense.Account === selectedAccount || (expense["Income/Expense"] === "Transfer-Out" && expense.Category === selectedAccount);
             return matchesDate && matchesAccount;
         });
+
+        filteredTransactions.sort((a, b) => new Date(convertDateFormat(b.Date)) - new Date(convertDateFormat(a.Date)));
 
         // Group transactions by day
         const transactionsByDay = filteredTransactions.reduce((acc, expense) => {
@@ -253,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function calculateMonthEndBalance(account, date) {
-        const transactions = masterData.filter(expense => {
+        const transactions = JSON.parse(localStorage.getItem('masterExpenses')).filter(expense => {
             const expenseDate = new Date(convertDateFormat(expense.Date));
             return expenseDate <= date && (expense.Account === account || (expense["Income/Expense"] === "Transfer-Out" && expense.Category === account));
         });

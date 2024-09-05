@@ -14,16 +14,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateDailyTransactions();
 
     window.addTransaction = function (newTransaction) { // Define addTransaction globally
+        const masterExpenses = JSON.parse(localStorage.getItem('masterExpenses'));
 
-        const existingIndex = masterData.length > 0 ? masterData.findIndex(expense => expense.ID == newTransaction.ID) : -1;
+        const existingIndex = masterExpenses.length > 0 ? masterExpenses.findIndex(expense => expense.ID == newTransaction.ID) : -1;
 
         if (existingIndex > -1) {
-            masterData[existingIndex] = newTransaction;
+            masterExpenses[existingIndex] = newTransaction;
         } else {
-            masterData.push(newTransaction);
+            masterExpenses.push(newTransaction);
         }
 
-        localStorage.setItem('masterExpenses', JSON.stringify(masterData));
+        localStorage.setItem('masterExpenses', JSON.stringify(masterExpenses));
 
         // Update currentDailyDate and currentMonthlyDate to the new transaction's date
         showModifiedTransactionPeriod(newTransaction);
@@ -151,6 +152,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             return expenseDate.getFullYear() === currentMonthlyDate.getFullYear();
         });
 
+        filteredTransactions.sort((a, b) => new Date(convertDateFormat(b.Date)) - new Date(convertDateFormat(a.Date)));
+
         // Group transactions by month
         const transactionsByMonth = filteredTransactions.reduce((acc, expense) => {
             const month = new Date(convertDateFormat(expense.Date)).getMonth();
@@ -162,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }, {});
 
         // Display transactions grouped by month
-        for (let i = 0; i < 12; i++) {
+        for (let i = 11; i >= 0; i--) {
             const monthContainer = document.createElement('div');
             monthContainer.className = 'transaction-row';
             monthContainer.dataset.month = i; // Add this line to store the month index
@@ -225,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         }, {});
 
         // Display transactions grouped by year
-        for (const [year, transactions] of Object.entries(transactionsByYear)) {
+        for (const [year, transactions] of Object.entries(transactionsByYear).sort((a, b) => Number.parseInt(b) - Number.parseInt(a))) {
             const yearContainer = document.createElement('div');
             yearContainer.className = 'transaction-row';
             yearContainer.dataset.year = year; // Add this line to store the year
@@ -265,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 setActiveTab('monthly');
                 currentYear.textContent = formatYear(currentMonthlyDate);
                 document.getElementById('daily-transactions').style.display = 'none';
-                document.getElementById('monthly-transactions').style.display = 'block';
+                document.getElementById('monthly-transactions').style.display = 'flex';
                 document.getElementById('total-transactions').style.display = 'none';
                 updateMonthlyTransactions();
             });
@@ -301,18 +304,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     document.querySelector('[data-tab="monthly"]').addEventListener('click', function () {
         document.getElementById('daily-transactions').style.display = 'none';
-        document.getElementById('monthly-transactions').style.display = 'block';
+        document.getElementById('monthly-transactions').style.display = 'flex';
         document.getElementById('total-transactions').style.display = 'none';
     });
 
     document.querySelector('[data-tab="total"]').addEventListener('click', function () {
         document.getElementById('daily-transactions').style.display = 'none';
         document.getElementById('monthly-transactions').style.display = 'none';
-        document.getElementById('total-transactions').style.display = 'block';
+        document.getElementById('total-transactions').style.display = 'flex';
     });
 
     // Ensure only one tab content is visible at a time initially
-    document.getElementById('daily-transactions').style.display = 'block';
+    document.getElementById('daily-transactions').style.display = 'flex';
     document.getElementById('monthly-transactions').style.display = 'none';
     document.getElementById('total-transactions').style.display = 'none';
 

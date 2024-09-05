@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const cancelBtn = document.querySelector('.cancel-btn');
     const suggestionsDiv = document.getElementById('suggestions');
 
-    dateField.value = new Date().toISOString().substring(0, 10);
-
     let accounts = [];
     let categories = [];
     let subcategories = [];
@@ -154,9 +152,22 @@ document.addEventListener('DOMContentLoaded', async function () {
         return [...new Set(categories[category]?.subcategories)];
     }
 
-    addTransactionBtn.addEventListener('click', () => {
+    addTransactionBtn.addEventListener('click', () => addNewTransaction());
+    document.querySelectorAll('.day-content').forEach(calendarDay => {
+        calendarDay.addEventListener('click', function(calendarDayElement) {
+            addNewTransaction(calendarDayElement);
+        });
+    });
+
+    function addNewTransaction(calendarDayElement = null) {
         transactionModal.style.display = 'block';
         resetTransactionForm();
+
+        if (calendarDayElement != null) {
+            dateField.value = formatDateField(new Date(calendarDayElement.target.firstChild.textContent).toLocaleDateString(), 'show-date');
+        } else {
+            dateField.value = new Date().toISOString().substring(0, 10);
+        }
 
         document.querySelector('.submit-btn').style.display = 'block';
         document.querySelector('.submit-btn').style.backgroundColor = '#ff0000b8';
@@ -169,7 +180,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         populateDropdowns();
         document.querySelector('.type-option[data-value="Expense"]').classList.add('active');
         toggleGrid(accountGrid);
-    });
+    }
 
     cancelBtn.addEventListener('click', () => transactionModal.style.display = 'none');
     window.addEventListener('click', event => { if (event.target === transactionModal) transactionModal.style.display = 'none'; });
@@ -184,12 +195,14 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (isTransfer) {
                 fromAccountBtn.textContent = accountBtn.textContent;
                 toAccountBtn.textContent = '';
+
                 document.querySelector('.submit-btn').style.backgroundColor = 'gray';
                 document.querySelectorAll('.field').forEach((thisElement) => {
                     if (!thisElement.classList.contains('type-options')) {
                         thisElement.style.borderBottom = '1px solid gray';
                     }
                 });
+
                 toggleGrid(fromAccountGrid);
             } else {
                 categoryBtn.textContent = '';
@@ -275,7 +288,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             document.getElementById('transaction-id').value = transaction.ID;
             document.querySelector('.type-option.active').classList.remove('active');
             document.querySelector(`.type-option[data-value="${transaction['Income/Expense']}"]`).classList.add('active');
-            document.getElementById('date').value = formatDateField(convertDateFormat(transaction.Date), 'show-date');
+            dateField.value = formatDateField(convertDateFormat(transaction.Date), 'show-date');
             document.getElementById(transaction['Income/Expense'] === 'Transfer-Out' ? 'from-account-btn' : 'account-btn').textContent = transaction.Account;
             if (transaction['Income/Expense'] !== 'Transfer-Out') {
                 categoryBtn.textContent = transaction.Category;
@@ -283,6 +296,28 @@ document.addEventListener('DOMContentLoaded', async function () {
                 populateSubcategories();
             } else {
                 document.getElementById('to-account-btn').textContent = transaction.Category;
+
+                document.querySelector('.submit-btn').style.backgroundColor = 'gray';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid gray';
+                    }
+                });
+            }
+            if (transaction['Income/Expense'] === 'Income') {
+                document.querySelector('.submit-btn').style.backgroundColor = '#004080';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid #004080b3';
+                    }
+                });
+            } else if (transaction['Income/Expense'] === 'Expense') {
+                document.querySelector('.submit-btn').style.backgroundColor = '#ff0000b8';
+                document.querySelectorAll('.field').forEach((thisElement) => {
+                    if (!thisElement.classList.contains('type-options')) {
+                        thisElement.style.borderBottom = '1px solid #ff00005c';
+                    }
+                });
             }
             document.getElementById('note').value = transaction.Note;
             document.getElementById('amount').value = transaction.INR;
@@ -303,6 +338,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 });
             });
             accountGrid.classList.remove('active');
+
+            fetchDropdowns();
         }
     }
 

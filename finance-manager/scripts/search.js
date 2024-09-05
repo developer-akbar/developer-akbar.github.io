@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const notesSet = new Set();
-        const regex = /^[a-zA-Z\s]+$/; // Only letters and spaces
+        const regex = /^[a-zA-Z\s-]+$/; // Only letters, hyphens and spaces
 
         masterData && masterData.forEach(expense => {
             if (regex.test(expense.Note) && expense.Note.toLowerCase().includes(searchInput)) {
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         displaySearchResults(searchResults);
         displaySelectedFilters();
 
-        // Rretain selected filters if any
+        // Retain selected filters if any
         const selectedFilters = {
             accounts: selectedAccounts,
             categories: selectedCategory,
@@ -476,7 +476,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (accounts.hasOwnProperty(account)) {
                 const option = document.createElement('div');
                 option.className = 'custom-option';
-                option.innerHTML = `<input type="checkbox" id="account-${account}" value="${account}" ${selectedFilters.accounts?.includes(account) ? 'checked' : ''}><label for="account-${account}">${account} <span class="filter-option-count">(${accounts[account].count})</span></label>`;
+                option.innerHTML = `<input type="checkbox" id="account-${account}" value="${account}" ${selectedFilters.accounts?.includes(account) ? 'checked' : ''}>
+                                    <label for="account-${account}">${account} 
+                                        <span class="filter-option-count">
+                                            (${accounts[account].count})
+                                        </span>
+                                    </label>`;
                 accountSelect.appendChild(option);
             }
         }
@@ -485,7 +490,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (categories.hasOwnProperty(category)) {
                 const option = document.createElement('div');
                 option.className = 'custom-option';
-                option.innerHTML = `<input type="checkbox" id="category-${category}" value="${category}" ${selectedFilters.categories?.includes(category) ? 'checked' : ''}><label for="category-${category}">${category} <span class="filter-option-count ${categories[category].type.toLowerCase()}">(${categories[category].count}) (${formatIndianCurrency(categories[category].total)})</span></label>`;
+                option.innerHTML = `<input type="checkbox" id="category-${category}" value="${category}" ${selectedFilters.categories?.includes(category) ? 'checked' : ''}>
+                                    <label for="category-${category}">${category} 
+                                        <span class="filter-option-count ${categories[category].type.toLowerCase()}">
+                                            (${categories[category].count}) (${formatIndianCurrency(categories[category].total)})
+                                        </span>
+                                    </label>`;
                 categorySelect.appendChild(option);
             }
         }

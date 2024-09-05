@@ -261,6 +261,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 expenseDate.getFullYear() === currentMonthlyDate.getFullYear();
         });
 
+        filteredTransactions.sort((a, b) => new Date(convertDateFormat(b.Date)) - new Date(convertDateFormat(a.Date)));
+
         const transactionsByDay = filteredTransactions.reduce((acc, expense) => {
             const date = new Date(convertDateFormat(expense.Date)).toDateString();
             if (!acc[date]) {
@@ -345,12 +347,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (Object.entries(transactionsByMonth).length > 0) {
             categoriesContainer.style.display = 'flex';
-            for (let i = 0; i < 12; i++) {
+            for (let i = 11; i >= 0; i--) {
                 const monthContainer = document.createElement('tr');
                 monthContainer.className = 'transaction-row';
                 monthContainer.dataset.month = i;
 
                 const monthName = document.createElement('td');
+                monthName.className = 'month';
                 monthName.textContent = new Date(2024, i).toLocaleString('default', { month: 'short' });
 
                 const totals = transactionsByMonth[i] ? calculateTotals(transactionsByMonth[i]) : { income: 0, expense: 0 };
@@ -437,6 +440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 const monthName = document.createElement('td');
+                monthName.className = 'month';
                 monthName.textContent = new Date(2024, monthIndex).toLocaleString('default', { month: 'short' });
 
                 const totals = transactionsByMonth[monthIndex] ? calculateTotals(transactionsByMonth[monthIndex]) : { income: 0, expense: 0 };
@@ -497,13 +501,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tableElement = document.createElement('table');
         const tableBodyElement = document.createElement('tbody');
 
-        for (const [year, transactions] of Object.entries(transactionsByYear)) {
+        for (const [year, transactions] of Object.entries(transactionsByYear).sort((a, b) => Number.parseInt(b) - Number.parseInt(a))) {
             categoriesContainer.style.display = 'flex';
             const yearContainer = document.createElement('tr');
             yearContainer.className = 'transaction-row';
             yearContainer.dataset.year = year;
 
             const yearName = document.createElement('td');
+            yearName.className = 'year';
             yearName.textContent = year;
 
             const totals = calculateTotals(transactions);
