@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateDailyTransactions();
 
     window.addTransaction = function (newTransaction) { // Define addTransaction globally
-        const masterExpenses = JSON.parse(localStorage.getItem('masterExpenses'));
+        const masterExpenses = JSON.parse(localStorage.getItem('masterExpenses')) || [];
 
         const existingIndex = masterExpenses.length > 0 ? masterExpenses.findIndex(expense => expense.ID == newTransaction.ID) : -1;
 
