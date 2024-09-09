@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,64 @@
     <link rel="stylesheet" href="styles/convert.css">
     <link rel="stylesheet" href="styles/common.css">
 </head>
+
 <body>
-    <div class="container">
-        <p class="csv-info" style="display: none;">Data updated <span class="csv-updated-at" title=""></span></p>
-        <h1>Import Transactions Excel data</h1>
-        <input type="file" id="fileInput" accept=".xlsx, .xls">
-        <button id="convertButton">Convert to CSV</button>
+    <div class="rebuild-container">
+        <h1>Manage Data</h1>
+        
+        <form class="container import-container">
+            <p class="csv-info" style="display: none;">Last data updated <span class="csv-updated-at" title=""></span>
+            </p>
+            <h2>Import Data</h2>
+            <p>(Excel or CSV)</p>
+            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
+            <button id="convertButton">Import &nbsp; &#8601;</button>
+        </form>
+
+        <div class="description">
+            <h3><strong>Import Data</strong></h3>
+            <p>The <strong>Import</strong> feature allows you to upload your transactions in bulk from an Excel or CSV
+                file.
+                This is particularly useful when you want to add new transactions or move your existing data from one
+                device to another. When you upload the file, you will be prompted with two options:
+            </p>
+            <ul>
+                <li><strong>Merge:</strong> This will add the new transactions to your existing data without deleting
+                    any of your old records.
+                </li>
+                <li><strong>Override:</strong> This will replace all your existing transactions with the new ones in the
+                    file, useful when you want to start fresh.
+                </li>
+            </ul>
+            <p>Simply choose the option that best fits your needs, and the transactions will be imported into the system
+                seamlessly.
+            </p>
+        </div>
+
+        <div class="container export-container">
+            <h2>Export saved data</h2>
+            <button id="exportButton">Export &nbsp; &#8599;</button>
+        </div>
+
+        <div class="description">
+            <h3><strong>Export Data</strong></h4>
+                <p>The <strong>Export</strong> feature allows you to download your transactions as a CSV file. This file
+                    can
+                    be saved on your device or transferred to another device. If you use multiple devices, you can
+                    <strong>use this
+                        feature to sync your transactions across all your devices by importing the exported
+                        file</strong>
+                </p>
+                <ul>
+                    <li>1. Export your data as a CSV file from one device.</li>
+                    <li>2. Import that CSV file on another device using the <strong>Import Data</strong> feature.</li>
+                </ul>
+                <p>This ensures that your data remains consistent and accessible across all platforms. Your transactions
+                    will be stored in a structured format with all details, including date, category, subcategory,
+                    amount,
+                    etc.
+                </p>
+        </div>
     </div>
 
     <!-- Loader Icon -->
@@ -26,7 +79,8 @@
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Caution: Data Replace Alert</h2>
-            <p>You already have some transactional records available in your application. Do you want to Merge or Override with new data?</p>
+            <p>You already have some transactional records available in your application. Do you want to Merge or
+                Override with new data?</p>
             <button id="mergeButton" class="modal-btn">Merge</button>
             <button id="overrideButton" class="modal-btn">Override</button>
         </div>
@@ -55,7 +109,11 @@
         </div>
     </div>
 
+    <!-- Scroll to top -->
+    <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
+
     <script src="scripts/common.js"></script>
     <script src="scripts/convert.js"></script>
 </body>
+
 </html>

@@ -81,6 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const worksheet = workbook.Sheets[sheetName];
 
             try {
+                // Fetch existing transactions from storage
+                let existingTransactions = JSON.parse(localStorage.getItem('masterExpenses')) || [];
+
                 // Convert worksheet to CSV data, replacing line breaks in cells
                 let csvData = XLSX.utils.sheet_to_csv(worksheet, { FS: ',', RS: '\n', strip: false });
 
@@ -90,16 +93,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 // Now split the CSV into rows
-                const rows = csvData.split('\n').map((row, index) => {
+                csvData = csvData.split('\n').map((row, index) => {
+                    index = index === 0 ? 0 : existingTransactions.length + index;
                     return row.length > 0
                         ? transformString(row, index).split(',').map(cell => `${cell.replace(/,/g, ';')}`).join(',')
                         : '';
                 }).join('\n');
 
-                let newTransactions = utility.parseCSV(rows);
-
-                // Fetch existing transactions from storage
-                let existingTransactions = JSON.parse(localStorage.getItem('masterExpenses'));
+                let newTransactions = utility.parseCSV(csvData);
 
                 // Find duplicates
                 // const duplicates = findDuplicates(existingTransactions, newTransactions);
@@ -226,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to check if two transactions are duplicates
     function isDuplicateTransaction(txn1, txn2) {
-        return txn1.Date === txn2.Date &&
+        return formatDateField(convertDateFormat(txn1.Date).toLocaleString(), 'show-date') === formatDateField(convertDateFormat(txn2.Date).toLocaleString(), 'show-date') &&
             txn1.Account === txn2.Account &&
             txn1.Category === txn2.Category &&
             txn1.Subcategory === txn2.Subcategory &&
@@ -329,4 +330,70 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         localStorage.setItem('accountGroups', JSON.stringify(accountGroups));
     }
+
+    document.getElementById('exportButton').addEventListener('click', exportToCSV);
+
+    function exportToCSV() {
+        const masterExpenses = JSON.parse(localStorage.getItem('masterExpenses')) || [];
+        if (masterExpenses.length === 0) {
+            alert('No data available to export.');
+            return;
+        }
+
+        // Define the CSV headers
+        const headers = ['Date', 'Account', 'Category', 'Subcategory', 'Note', 'INR', 'Income/Expense', 'Description', 'Amount', 'Currency', 'ID'];
+
+        // Map data to CSV format
+        const csvRows = [headers.join(',')]; // Add header row
+
+        masterExpenses.forEach(expense => {
+            const row = [
+                expense.Date,
+                expense.Account,
+                expense.Category,
+                expense.Subcategory || '',
+                expense.Note || '',
+                expense.INR || 0,
+                expense["Income/Expense"],
+                expense.Description || '',
+                expense.Amount || '',
+                expense.Currency || 'INR',
+                expense.ID || ''
+            ].map(field => `"${field}"`); // Enclose each field in quotes to handle commas and newlines
+
+            csvRows.push(row.join(',')); // Join fields into a CSV row
+        });
+
+        const csvContent = csvRows.join('\n');
+
+        // Create a blob from CSV content
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+
+        const date = new Date();
+        const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ /g, '-');
+        const fileName = `Finance_Manager_complete_${formattedDate}.csv`;
+
+        // Create a link to download the file
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function formatDateField(dateString, datePurpose) {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        if (datePurpose === 'add-date') {
+            return `${day}/${month}/${year}`;
+        } else if (datePurpose === 'show-date') {
+            return `${year}-${month}-${day}`;
+        }
+    }
+
 });
