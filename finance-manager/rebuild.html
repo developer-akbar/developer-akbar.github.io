@@ -16,14 +16,14 @@
     <div class="rebuild-container">
         <h1>Manage Data</h1>
         
-        <form class="container import-container">
+        <div class="container import-container">
             <p class="csv-info" style="display: none;">Last data updated <span class="csv-updated-at" title=""></span>
             </p>
             <h2>Import Data</h2>
             <p>(Excel or CSV)</p>
             <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
             <button id="convertButton">Import &nbsp; &#8601;</button>
-        </form>
+        </div>
 
         <div class="description">
             <h3><strong>Import Data</strong></h3>
@@ -111,7 +111,7 @@
 
     <!-- Scroll to top -->
     <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
-
+    
     <script src="scripts/common.js"></script>
     <script src="scripts/convert.js"></script>
 </body>

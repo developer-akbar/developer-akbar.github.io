@@ -34,6 +34,10 @@ form.import-container:focus-within {
     margin-bottom: 1rem;
 }
 
+input[type="file"] {
+    margin-bottom: 20px;
+}
+
 .csv-updated-at {
     background-color: lightgreen;
     padding: .25em .5em;
