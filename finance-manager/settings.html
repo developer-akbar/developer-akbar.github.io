@@ -10,6 +10,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="resources/finance-manager-icon.png">
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/settings.css">
+    <link rel="stylesheet" href="styles/backup-data.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
 
@@ -33,38 +34,167 @@
     </nav>
     <div class="overlay"></div>
     <main>
-        <h2 class="heading">Accounts</h2>
+        <h2 class="heading">Settings</h2>
         <div class="settings-container">
-            <ul class="setting-items">
-                <li class="tab-btn active" data-tab="accounts-settings">Accounts</li>
-                <li class="tab-btn" data-tab="categories-settings">Categories</li>
-            </ul>
-            <div id="accounts-settings" class="tab-content active">
-                <div class="group-container">
-                    <div class="cta-buttons sticky-container">
-                        <button id="add-account-group-btn">Add Account Group</button>
-                        <button id="add-account-btn">Add New Account</button>
-                    </div>
-                    <div id="account-groups-list" class="grid-container mapping-container"></div>
-                </div>
-                <div id="unmapped-accounts" class="mapping-container">
-                    <h3 id="unmapped-accounts-heading">Unmapped Accounts</h3>
-                    <div id="accounts-list"></div>
-                </div>
+            <div class="setting-items">
+                <div class="mobile-header"></div>
+                <ul>
+                    <li class="tab-btn" data-tab="accounts-settings">Accounts</li>
+                    <li class="tab-btn" data-tab="categories-settings">Categories</li>
+                    <h3 class="setting-category">Backup</h3>
+                    <li class="tab-btn" data-tab="import-settings">Import Data</li>
+                    <li class="tab-btn" data-tab="export-settings">Export Data</li>
+                </ul>
             </div>
-            <div id="categories-settings" class="tab-content">
-                <div class="group-container">
-                    <div class="cta-buttons sticky-container">
-                        <button id="add-category-btn">Add Category</button>
-                        <button id="add-subcategory-btn">Add New Subcategory</button>
+            <div class="setting-items-content" style="display: none;">
+                <div class="setting-header mobile-header sticky-container">
+                    <p id="back-button">&larr; &nbsp;&nbsp;
+                        <span id="selected-setting-item" class="selected-setting-item"></span>
+                    </p>
+                </div>
+                <div id="accounts-settings" class="tab-content">
+                    <div class="group-container">
+                        <div class="cta-buttons">
+                            <button id="add-account-group-btn">Add Account Group</button>
+                            <button id="add-account-btn">Add New Account</button>
+                        </div>
+                        <div id="account-groups-list" class="grid-container mapping-container"></div>
                     </div>
-                    <div id="categories-list" class="grid-container mapping-container"></div>
+                    <div id="unmapped-accounts" class="mapping-container">
+                        <h3 id="unmapped-accounts-heading">Unmapped Accounts</h3>
+                        <div id="accounts-list"></div>
+                    </div>
                 </div>
-                <div id="unmapped-subcategories" class="mapping-container">
-                    <h3 id="unmapped-subcategories-heading">Unmapped Subcategories</h3>
-                    <div id="subcategories-list"></div>
+                <div id="categories-settings" class="tab-content">
+                    <div class="group-container">
+                        <div class="cta-buttons">
+                            <button id="add-category-btn">Add Category</button>
+                            <button id="add-subcategory-btn">Add New Subcategory</button>
+                        </div>
+                        <div id="categories-list" class="grid-container mapping-container"></div>
+                    </div>
+                    <div id="unmapped-subcategories" class="mapping-container">
+                        <h3 id="unmapped-subcategories-heading">Unmapped Subcategories</h3>
+                        <div id="subcategories-list"></div>
+                    </div>
                 </div>
+                <div id="import-settings" class="tab-content">
+                    <div class="backup-settings-container">
+                        <div class="container import-container">
+                            <p class="csv-info" style="display: none;">Last data updated <span class="csv-updated-at"
+                                    title=""></span>
+                            </p>
+                            <h2>Import Data</h2>
+                            <p>(Excel or CSV)</p>
+                            <input type="file" id="fileInput" accept=".xlsx, .xls, .csv">
+                            <button id="convertButton" disabled>Import &nbsp; &#8601;</button>
+                        </div>
+
+                        <div class="description">
+                            <h3><strong>Import Data</strong></h3>
+                            <p>The <strong>Import</strong> feature allows you to upload your transactions in bulk from
+                                an Excel or CSV
+                                file.
+                                This is particularly useful when you want to add new transactions or move your existing
+                                data from one
+                                device to another. When you upload the file, you will be prompted with two options:
+                            </p>
+                            <ul>
+                                <li><strong>Merge:</strong> This will add the new transactions to your existing data
+                                    without deleting
+                                    any of your old records.
+                                </li>
+                                <li><strong>Override:</strong> This will replace all your existing transactions with the
+                                    new ones in the
+                                    file, useful when you want to start fresh.
+                                </li>
+                            </ul>
+                            <p>Simply choose the option that best fits your needs, and the transactions will be imported
+                                into the system
+                                seamlessly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="export-settings" class="tab-content">
+                    <div class="backup-settings-container">
+                        <div class="container export-container">
+                            <h2>Export saved data</h2>
+                            <button id="exportButton">Export &nbsp; &#8599;</button>
+                        </div>
+
+                        <div class="description">
+                            <h3><strong>Export Data</strong></h4>
+                                <p>The <strong>Export</strong> feature allows you to download your transactions as a CSV
+                                    file. This file
+                                    can
+                                    be saved on your device or transferred to another device. If you use multiple
+                                    devices, you can
+                                    <strong>use this
+                                        feature to sync your transactions across all your devices by importing the
+                                        exported
+                                        file</strong>
+                                </p>
+                                <ul>
+                                    <li>1. Export your data as a CSV file from one device.</li>
+                                    <li>2. Import that CSV file on another device using the <strong>Import Data</strong>
+                                        feature.</li>
+                                </ul>
+                                <p>This ensures that your data remains consistent and accessible across all platforms.
+                                    Your transactions
+                                    will be stored in a structured format with all details, including date, category,
+                                    subcategory,
+                                    amount,
+                                    etc.
+                                </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loader Icon -->
+                <div id="loader" class="loader" style="display: none;"></div>
+
+                <!-- Modal for user consent -->
+                <div id="consent-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Caution: Data Replace Alert</h2>
+                        <p>You already have some transactional records available in your application. Do you want to
+                            Merge or
+                            Override with new data?</p>
+                        <button id="mergeButton" class="modal-btn">Merge</button>
+                        <button id="overrideButton" class="modal-btn">Override</button>
+                    </div>
+                </div>
+
+                <!-- Modal for Duplicate Record Handling -->
+                <div id="duplicate-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close-button">&times;</span>
+                        <h2>Duplicate Records Found</h2>
+                        <p><span class="duplicate-count">0</span> duplicate transactions were found. What would you
+                            like to do?</p>
+                        <div class="duplicate-options">
+                            <button id="skipButton" class="modal-btn">Skip Duplicates</button>
+                            <button id="override-duplicates" class="modal-btn">Override Duplicates</button>
+                            <button id="manualButton" class="modal-btn" disabled>Manual Review</button>
+                        </div>
+                        <!-- Area to display duplicate records for manual review (if needed) -->
+                        <div id="duplicate-list" style="display: none;">
+                            <h3>Review Duplicates:</h3>
+                            <table id="duplicate-table">
+                                <tbody>
+                                    <!-- Duplicate records will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll to top -->
+                <button class="scroll-to-top" onclick="scrollToTop()" style="display: none;">&uarr;</button>
             </div>
+        </div>
         </div>
 
         <!-- Account Group Modal -->
@@ -260,6 +390,7 @@
     </div>
 
     <script src="scripts/common.js"></script>
+    <script src="scripts/backup-data.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/settings.js"></script>
 </body>

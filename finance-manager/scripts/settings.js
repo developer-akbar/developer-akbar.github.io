@@ -62,12 +62,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
+            document.querySelector('.setting-items-content').style.display = 'block';
+            document.querySelector('.setting-items').style.display = 'none';
+            document.querySelector('#selected-setting-item').textContent = tab.textContent;
+
             tabs.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
 
             tab.classList.add('active');
             document.getElementById(tab.dataset.tab).classList.add('active');
         });
+    });
+
+    // Back button event listener
+    document.querySelector('#back-button').addEventListener('click', () => {
+        document.querySelector('.setting-items-content').style.display = 'none';
+        document.querySelector('.setting-items').style.display = 'block';
     });
 
     let selectedAccount = null;
@@ -144,6 +154,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderGroups() {
         accountGroupsList.innerHTML = '';
         accountGroups.forEach(group => {
+            if (group.id == undefined && group.name == undefined) return;
+
             const groupBox = document.createElement('div');
             groupBox.classList.add('group-box');
             groupBox.dataset.id = group.id;
@@ -160,7 +172,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 groupName.pop();
                 openAccountModal('add', groupName.join(' '));
             });
-            
+
             accountGroupsList.appendChild(groupBox);
 
             if (accountMappings[group.name]) {

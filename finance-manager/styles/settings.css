@@ -1,4 +1,7 @@
-/* Tab navigation */
+.setting-items ul {
+    padding-inline: 1rem;
+}
+
 .tabs {
     display: flex;
     justify-content: flex-start;
@@ -7,18 +10,31 @@
 }
 
 .tab-btn {
-    padding: 0.5rem 1rem;
+    padding-block: 0.5rem;
     cursor: pointer;
-    /* background-color: #f0f0f0; */
-    /* border: 1px solid #ccc; */
-    border-bottom: none;
     margin-right: 0.2rem;
 }
 
-.tab-btn.active {
-    background-color: #4caf50;
-    /* border: 1px solid #ffffff; */
-    border-bottom: 1px solid white;
+.setting-category {
+    margin-top: 1rem;
+}
+
+.setting-header {
+    padding-block: 0.5rem;
+    border-bottom: 1px solid #7c7171;
+    margin-bottom: 1rem;
+}
+
+#back-button {
+    display: inline-block;
+    cursor: pointer;
+    padding-inline: .4em;
+    border-radius: 4px;
+}
+
+#back-button:hover {
+    background-color: #a2a4a2;
+    color: white;
 }
 
 .tab-content {
@@ -27,14 +43,7 @@
 
 .tab-content.active {
     display: block;
-}
-
-.mapping-container {
     padding: 0 1rem 1rem;
-}
-
-.cta-buttons {
-    padding: 1rem;
 }
 
 .group-container .group-box {
