@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     currentYear.textContent = formatYear(currentMonthlyDate);
 
     const masterData = await utility.initializeMasterData() || [];
+    if(masterData.length == 0) {
+        document.querySelector('.start-message').style.display = 'block';
+    }
     updateDailyTransactions();
 
     window.addTransaction = function (newTransaction) { // Define addTransaction globally
@@ -129,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         } else {
             const tableColumn = document.createElement('td');
             tableColumn.className = 'no-transactions-msg';
-            tableColumn.textContent = 'No transactions';
+            tableColumn.innerHTML = `No transactions.<br>Please start adding new transaction by clicking on +`;
             tableElement.appendChild(tableColumn);
         }
         dailyTransactionsContainer.appendChild(tableElement);
